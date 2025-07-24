@@ -58,4 +58,4 @@ plugins = ["pydantic.mypy"]
 [tool.ruff]
 line-length = 88
 select = ["E", "F", "W", "I", "UP", "C4", "B"]
-ignore = ["E501"]
+ignore = ["E501", "E402"]
