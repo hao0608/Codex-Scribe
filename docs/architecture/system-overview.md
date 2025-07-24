@@ -18,26 +18,26 @@
 ```mermaid
 graph TD
     subgraph Input Layer
-        A[GitHub Webhook<br>(e.g., new commit, comment)]
-        B[Manual Trigger<br>(e.g., user feedback form)]
+        A["GitHub Webhook\n(e.g., new commit, comment)"]
+        B["Manual Trigger\n(e.g., user feedback form)"]
     end
 
     subgraph AI Agent Core
-        C{Agent Orchestrator<br>(LangChain)}
-        D[Task Planner<br>(LLM)]
+        C{"Agent Orchestrator\n(LangChain)"}
+        D["Task Planner\n(LLM)"]
         E[Tool Executor]
     end
 
     subgraph Knowledge & Understanding Layer
-        F[Vector Database<br>(Code Embeddings - ChromaDB)]
-        G[Graph Database<br>(Knowledge Graph - Neo4j)]
-        H[Code Indexing Pipeline<br>(Offline, Periodic)]
+        F["Vector Database\n(Code Embeddings - ChromaDB)"]
+        G["Graph Database\n(Knowledge Graph - Neo4j)"]
+        H["Code Indexing Pipeline\n(Offline, Periodic)"]
     end
 
     subgraph Action & Tooling Layer
         I[GitHub API Client]
-        J[Code Parser (AST)<br>(Tree-sitter)]
-        K[LLM APIs<br>(OpenAI, Anthropic, etc.)]
+        J["Code Parser (AST)\n(Tree-sitter)"]
+        K["LLM APIs\n(OpenAI, Anthropic, etc.)"]
     end
 
     subgraph Output Layer

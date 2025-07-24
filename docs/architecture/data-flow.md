@@ -25,11 +25,11 @@ graph TD
     D -- Supported File --> E[Read File Content];
     E --> F(Code/Text Chunks);
     F --> G[Generate Embeddings];
-    G --> H[(Vector DB<br>ChromaDB)];
+    G --> H["(Vector DB\nChromaDB)"];
 
     E --> I[Parse AST with Tree-sitter];
     I --> J{Extract Entities & Relations};
-    J --> K[(Graph DB<br>Neo4j)];
+    J --> K["(Graph DB\nNeo4j)"];
     
     C -- All Files Processed --> L[End Indexing];
 
@@ -78,7 +78,7 @@ graph TD
     end
 
     subgraph System Response
-        H[Formatted Output<br>(GitHub Issue, JSON, Text)]
+        H[Formatted Output\n(GitHub Issue, JSON, Text)]
     end
 
     A --> B;
