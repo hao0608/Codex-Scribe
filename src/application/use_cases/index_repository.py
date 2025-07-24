@@ -2,9 +2,13 @@
 This module contains the use case for indexing a code repository.
 """
 
+import asyncio
+
+from tqdm import tqdm
+
 from src.domain.repositories.code_repository import CodeRepository
-from src.domain.services.embedding_service import EmbeddingService
 from src.infrastructure.file_processor import FileProcessor
+from src.infrastructure.llm.openai_client import AsyncOpenAIClient
 from src.infrastructure.text_splitter import CodeTextSplitter
 
 
@@ -17,43 +21,30 @@ class IndexRepositoryUseCase:
         self,
         file_processor: FileProcessor,
         text_splitter: CodeTextSplitter,
-        embedding_service: EmbeddingService,
+        embedding_client: AsyncOpenAIClient,
         code_repository: CodeRepository,
     ):
         """
         Initializes the IndexRepositoryUseCase.
-
-        Args:
-            file_processor: An instance of FileProcessor to handle file operations.
-            text_splitter: An instance of CodeTextSplitter to chunk documents.
-            embedding_service: An instance of EmbeddingService to create embeddings.
-            code_repository: An instance of CodeRepository to store the chunks.
         """
         self.file_processor = file_processor
         self.text_splitter = text_splitter
-        self.embedding_service = embedding_service
+        self.embedding_client = embedding_client
         self.code_repository = code_repository
 
-    def execute(self, directory_path: str) -> None:
+    async def execute(self, directory_path: str) -> None:
         """
-        Executes the repository indexing process.
-
-        Args:
-            directory_path: The path to the local repository to be indexed.
+        Executes the repository indexing process asynchronously.
         """
         print(f"Starting to index repository at: {directory_path}")
 
-        # 1. Discover and read all files
         file_contents = self.file_processor.read_files(directory_path)
         print(f"Found {len(file_contents)} files to process.")
 
         all_chunks = []
         for file_path, content in file_contents.items():
             if not content.strip():
-                print(f"Skipping empty file: {file_path}")
                 continue
-
-            # 2. Split file content into chunks
             chunks = self.text_splitter.split(file_path, content)
             all_chunks.extend(chunks)
 
@@ -63,17 +54,37 @@ class IndexRepositoryUseCase:
 
         print(f"Generated {len(all_chunks)} code chunks.")
 
-        # 3. Generate embeddings for all chunks in a batch
-        chunk_contents = [chunk.content for chunk in all_chunks]
-        embeddings = self.embedding_service.get_embeddings(chunk_contents)
+        batch_size = 200  # OpenAI API batch size limit
 
-        # 4. Assign embeddings back to chunks
+        tasks = []
+        for i in range(0, len(all_chunks), batch_size):
+            batch_chunks = all_chunks[i : i + batch_size]
+            chunk_contents = [chunk.content for chunk in batch_chunks]
+            tasks.append(self.embedding_client.get_embeddings_async(chunk_contents))
+
+        print(f"Sending {len(tasks)} batches to OpenAI API...")
+
+        all_embeddings = []
+        # Use tqdm for progress bar
+        for f in tqdm(
+            asyncio.as_completed(tasks), total=len(tasks), desc="Generating Embeddings"
+        ):
+            embeddings_batch = await f
+            all_embeddings.extend(embeddings_batch)
+
+        chunks_with_embeddings = []
         for i, chunk in enumerate(all_chunks):
-            # Pydantic models are immutable, so we create a new instance
-            # with the embedding.
-            chunk_with_embedding = chunk.model_copy(update={"embedding": embeddings[i]})
-            all_chunks[i] = chunk_with_embedding
+            chunk_with_embedding = chunk.model_copy(
+                update={"embedding": all_embeddings[i]}
+            )
+            chunks_with_embeddings.append(chunk_with_embedding)
 
-        # 5. Add all chunks to the repository in a batch
-        self.code_repository.add_batch(all_chunks)
-        print(f"Successfully indexed {len(all_chunks)} chunks.")
+        print("Adding chunks to the vector store...")
+        # Add to repository in batches as well to be memory efficient
+        for i in tqdm(
+            range(0, len(chunks_with_embeddings), batch_size), desc="Storing Chunks"
+        ):
+            batch_to_store = chunks_with_embeddings[i : i + batch_size]
+            self.code_repository.add_batch(batch_to_store)
+
+        print(f"Successfully indexed {len(all_chunks)} chunks in total.")
