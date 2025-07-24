@@ -23,14 +23,14 @@ class OpenAIClient(EmbeddingService):
         self.client = OpenAI(api_key=self.api_key)
 
     def get_embedding(
-        self, text: str, model: str = "text-embedding-3-large"
+        self, text: str, model: str = "text-embedding-3-small"
     ) -> list[float]:
         text = text.replace("\n", " ")
         response = self.client.embeddings.create(input=[text], model=model)
         return cast(list[float], response.data[0].embedding)
 
     def get_embeddings(
-        self, texts: list[str], model: str = "text-embedding-3-large"
+        self, texts: list[str], model: str = "text-embedding-3-small"
     ) -> list[list[float]]:
         texts = [text.replace("\n", " ") for text in texts]
         response = self.client.embeddings.create(input=texts, model=model)
@@ -70,12 +70,12 @@ class AsyncOpenAIClient(EmbeddingService):
         # A truly async implementation would use the async client here as well.
         sync_client = OpenAI(api_key=self.api_key)
         response = sync_client.embeddings.create(
-            input=[text.replace("\n", " ")], model="text-embedding-3-large"
+            input=[text.replace("\n", " ")], model="text-embedding-3-small"
         )
         return cast(list[float], response.data[0].embedding)
 
     async def get_embeddings_async(
-        self, texts: list[str], model: str = "text-embedding-3-large"
+        self, texts: list[str], model: str = "text-embedding-3-small"
     ) -> list[list[float]]:
         """
         Asynchronously creates embeddings for a batch of texts.
@@ -85,7 +85,7 @@ class AsyncOpenAIClient(EmbeddingService):
         return [cast(list[float], item.embedding) for item in response.data]
 
     def get_embeddings(
-        self, texts: list[str], model: str = "text-embedding-3-large"
+        self, texts: list[str], model: str = "text-embedding-3-small"
     ) -> list[list[float]]:
         """
         Synchronous wrapper for the async embedding generation for interface compatibility.

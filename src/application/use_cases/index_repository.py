@@ -4,8 +4,9 @@ This module contains the use case for indexing a code repository.
 
 import asyncio
 
-from tqdm import tqdm
+from tqdm.asyncio import tqdm_asyncio
 
+from src.domain.entities.code_chunk import CodeChunk
 from src.domain.repositories.code_repository import CodeRepository
 from src.infrastructure.file_processor import FileProcessor
 from src.infrastructure.llm.openai_client import AsyncOpenAIClient
@@ -54,36 +55,44 @@ class IndexRepositoryUseCase:
 
         print(f"Generated {len(all_chunks)} code chunks.")
 
-        batch_size = 200  # OpenAI API batch size limit
+        batch_size = 500  # OpenAI API batch size limit
+
+        # Limit concurrency to avoid hitting rate limits
+        semaphore = asyncio.Semaphore(10)
+
+        async def get_embeddings_for_batch(
+            batch_chunks: list["CodeChunk"],
+        ) -> list["CodeChunk"]:
+            async with semaphore:
+                chunk_contents = [chunk.content for chunk in batch_chunks]
+                embeddings = await self.embedding_client.get_embeddings_async(
+                    chunk_contents
+                )
+
+                chunks_with_embeddings = []
+                for i, chunk in enumerate(batch_chunks):
+                    chunk_with_embedding = chunk.model_copy(
+                        update={"embedding": embeddings[i]}
+                    )
+                    chunks_with_embeddings.append(chunk_with_embedding)
+                return chunks_with_embeddings
 
         tasks = []
         for i in range(0, len(all_chunks), batch_size):
             batch_chunks = all_chunks[i : i + batch_size]
-            chunk_contents = [chunk.content for chunk in batch_chunks]
-            tasks.append(self.embedding_client.get_embeddings_async(chunk_contents))
+            tasks.append(get_embeddings_for_batch(batch_chunks))
 
-        print(f"Sending {len(tasks)} batches to OpenAI API...")
+        print(
+            f"Sending {len(tasks)} batches to OpenAI API with controlled concurrency..."
+        )
 
-        all_embeddings = []
-        # Use tqdm for progress bar
-        for f in tqdm(
-            asyncio.as_completed(tasks), total=len(tasks), desc="Generating Embeddings"
-        ):
-            embeddings_batch = await f
-            all_embeddings.extend(embeddings_batch)
+        results = await tqdm_asyncio.gather(*tasks, desc="Generating Embeddings")
 
-        chunks_with_embeddings = []
-        for i, chunk in enumerate(all_chunks):
-            chunk_with_embedding = chunk.model_copy(
-                update={"embedding": all_embeddings[i]}
-            )
-            chunks_with_embeddings.append(chunk_with_embedding)
+        chunks_with_embeddings = [chunk for batch in results for chunk in batch]
 
         print("Adding chunks to the vector store...")
         # Add to repository in batches as well to be memory efficient
-        for i in tqdm(
-            range(0, len(chunks_with_embeddings), batch_size), desc="Storing Chunks"
-        ):
+        for i in range(0, len(chunks_with_embeddings), batch_size):
             batch_to_store = chunks_with_embeddings[i : i + batch_size]
             self.code_repository.add_batch(batch_to_store)
 
