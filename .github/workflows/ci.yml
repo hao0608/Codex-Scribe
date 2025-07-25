@@ -46,3 +46,17 @@ jobs:
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: true
+
+  deploy-docs:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - run: |
+          pip install poetry
+          poetry install
+      - run: poetry run mkdocs gh-deploy --force

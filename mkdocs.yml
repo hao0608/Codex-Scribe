@@ -1,0 +1,28 @@
+site_name: Codex-Scribe
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Architecture:
+    - System Overview: architecture/system-overview.md
+    - API Design: architecture/api-design.md
+    - Data Flow: architecture/data-flow.md
+    - Security Considerations: architecture/security-considerations.md
+  - Development:
+    - Git Workflow: development/git-workflow.md
+    - Phase 1 - MVP: development/phase-1-mvp.md
+    - Phase 2 - Automation: development/phase-2-automation.md
+    - Phase 3 - Knowledge Graph: development/phase-3-knowledge-graph.md
+  - Implementation:
+    - Setup Guide: implementation/setup-guide.md
+    - Deployment: implementation/deployment.md
+    - Testing Strategy: implementation/testing-strategy.md
+    - Monitoring: implementation/monitoring.md
+  - Research:
+    - Literature Review: research/literature-review.md
+    - Technology Comparison: research/technology-comparison.md
+  - Technical:
+    - AI Model Specs: technical/ai-model-specs.md
+    - Coding Standards: technical/coding-standards.md
+    - Database Schema: technical/database-schema.md
+    - Performance Benchmarks: technical/performance-benchmarks.md
