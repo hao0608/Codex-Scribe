@@ -57,9 +57,10 @@ class AnswerQuestionUseCase:
         context = "\n\n---\n\n".join([chunk.content for chunk in retrieved_chunks])
 
         system_message = (
-            "You are an expert software developer and AI assistant. "
-            "Analyze the following code context to answer the user's question. "
-            "Provide a clear, concise answer, and if relevant, include code snippets from the context."
+            "你是一位專業的軟體開發專家與 AI 助理。"
+            "請分析以下程式碼上下文來回答使用者的問題。"
+            "請提供清晰、簡潔的答案，並在適當時附上相關的程式碼片段。"
+            "請務必使用繁體中文（台灣）進行回覆。"
         )
 
         prompt = f"""
