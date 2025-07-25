@@ -34,6 +34,15 @@ jobs:
         poetry run ruff .
         poetry run mypy .
 
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        poetry run pytest
+        poetry run pytest --cov=src --cov-report=xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
