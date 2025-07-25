@@ -31,6 +31,16 @@ async def main() -> None:
         type=str,
         help="The local path to the code repository to be indexed.",
     )
+    parser.add_argument(
+        "--include-dirs",
+        nargs="+",
+        help="A list of specific directories to include in the indexing.",
+    )
+    parser.add_argument(
+        "--exclude-patterns",
+        nargs="+",
+        help="A list of glob patterns to exclude from indexing.",
+    )
     args = parser.parse_args()
 
     if not os.path.isdir(args.repo_path):
@@ -39,7 +49,7 @@ async def main() -> None:
 
     try:
         # --- Dependency Injection ---
-        file_processor = FileProcessor()
+        file_processor = FileProcessor(exclude_patterns=args.exclude_patterns)
         text_splitter = CodeTextSplitter()
         openai_client = AsyncOpenAIClient()
         chroma_client = ChromaDBClient()
@@ -52,7 +62,7 @@ async def main() -> None:
         )
         # --- End of Dependency Injection ---
 
-        await index_use_case.execute(args.repo_path)
+        await index_use_case.execute(args.repo_path, args.include_dirs)
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")

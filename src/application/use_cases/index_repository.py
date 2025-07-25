@@ -30,13 +30,17 @@ class IndexRepositoryUseCase:
         self.embedding_client = embedding_client
         self.code_repository = code_repository
 
-    async def execute(self, directory_path: str) -> None:
+    async def execute(
+        self, directory_path: str, include_dirs: list[str] | None = None
+    ) -> None:
         """
         Executes the repository indexing process with resume capability.
         """
         print(f"Starting to index repository at: {directory_path}")
+        if include_dirs:
+            print(f"Only including directories: {', '.join(include_dirs)}")
 
-        file_contents = self.file_processor.read_files(directory_path)
+        file_contents = self.file_processor.read_files(directory_path, include_dirs)
         print(f"Found {len(file_contents)} files to process.")
 
         all_chunks = []
