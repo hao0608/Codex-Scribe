@@ -7,7 +7,7 @@ import asyncio
 from tqdm.asyncio import tqdm_asyncio
 
 from src.domain.entities.code_chunk import CodeChunk
-from src.domain.repositories.code_repository import CodeRepository
+from src.infrastructure.database.chroma_client import ChromaDBClient
 from src.infrastructure.file_processor import FileProcessor
 from src.infrastructure.llm.openai_client import AsyncOpenAIClient
 from src.infrastructure.text_splitter import CodeTextSplitter
@@ -23,11 +23,8 @@ class IndexRepositoryUseCase:
         file_processor: FileProcessor,
         text_splitter: CodeTextSplitter,
         embedding_client: AsyncOpenAIClient,
-        code_repository: CodeRepository,
+        code_repository: ChromaDBClient,  # Type hint specifically for get_existing_chunk_ids
     ):
-        """
-        Initializes the IndexRepositoryUseCase.
-        """
         self.file_processor = file_processor
         self.text_splitter = text_splitter
         self.embedding_client = embedding_client
@@ -35,7 +32,7 @@ class IndexRepositoryUseCase:
 
     async def execute(self, directory_path: str) -> None:
         """
-        Executes the repository indexing process asynchronously.
+        Executes the repository indexing process with resume capability.
         """
         print(f"Starting to index repository at: {directory_path}")
 
@@ -53,47 +50,54 @@ class IndexRepositoryUseCase:
             print("No content to index.")
             return
 
-        print(f"Generated {len(all_chunks)} code chunks.")
+        print(f"Generated {len(all_chunks)} total code chunks.")
 
-        batch_size = 500  # OpenAI API batch size limit
+        # --- Resume Logic ---
+        all_chunk_ids = [chunk.id for chunk in all_chunks]
+        existing_ids = self.code_repository.get_existing_chunk_ids(all_chunk_ids)
 
-        # Limit concurrency to avoid hitting rate limits
-        semaphore = asyncio.Semaphore(10)
+        unindexed_chunks = [
+            chunk for chunk in all_chunks if chunk.id not in existing_ids
+        ]
 
-        async def get_embeddings_for_batch(
-            batch_chunks: list["CodeChunk"],
-        ) -> list["CodeChunk"]:
+        if not unindexed_chunks:
+            print("All chunks are already indexed. Nothing to do.")
+            return
+
+        print(
+            f"{len(existing_ids)} chunks already indexed. Resuming with {len(unindexed_chunks)} new chunks."
+        )
+        # --- End of Resume Logic ---
+
+        batch_size = 200
+        semaphore = asyncio.Semaphore(5)  # Reduced concurrency
+
+        async def get_embeddings_for_batch(batch: list[CodeChunk]) -> list[CodeChunk]:
             async with semaphore:
-                chunk_contents = [chunk.content for chunk in batch_chunks]
-                embeddings = await self.embedding_client.get_embeddings_async(
-                    chunk_contents
-                )
+                contents = [chunk.content for chunk in batch]
+                embeddings = await self.embedding_client.get_embeddings_async(contents)
 
-                chunks_with_embeddings = []
-                for i, chunk in enumerate(batch_chunks):
-                    chunk_with_embedding = chunk.model_copy(
-                        update={"embedding": embeddings[i]}
+                processed_batch = []
+                for i, chunk in enumerate(batch):
+                    processed_batch.append(
+                        chunk.model_copy(update={"embedding": embeddings[i]})
                     )
-                    chunks_with_embeddings.append(chunk_with_embedding)
-                return chunks_with_embeddings
+
+                # Store immediately after processing
+                self.code_repository.add_batch(processed_batch)
+                return processed_batch
 
         tasks = []
-        for i in range(0, len(all_chunks), batch_size):
-            batch_chunks = all_chunks[i : i + batch_size]
-            tasks.append(get_embeddings_for_batch(batch_chunks))
+        for i in range(0, len(unindexed_chunks), batch_size):
+            batch_to_process = unindexed_chunks[i : i + batch_size]
+            tasks.append(get_embeddings_for_batch(batch_to_process))
 
         print(
             f"Sending {len(tasks)} batches to OpenAI API with controlled concurrency..."
         )
 
-        results = await tqdm_asyncio.gather(*tasks, desc="Generating Embeddings")
+        await tqdm_asyncio.gather(*tasks, desc="Indexing Batches")
 
-        chunks_with_embeddings = [chunk for batch in results for chunk in batch]
-
-        print("Adding chunks to the vector store...")
-        # Add to repository in batches as well to be memory efficient
-        for i in range(0, len(chunks_with_embeddings), batch_size):
-            batch_to_store = chunks_with_embeddings[i : i + batch_size]
-            self.code_repository.add_batch(batch_to_store)
-
-        print(f"Successfully indexed {len(all_chunks)} chunks in total.")
+        print(
+            f"Successfully indexed {len(unindexed_chunks)} new chunks. Total indexed: {len(all_chunks)}."
+        )
