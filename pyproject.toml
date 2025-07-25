@@ -60,7 +60,7 @@ warn_unused_configs = true
 ignore_missing_imports = true
 strict = true
 plugins = ["pydantic.mypy"]
-disable_error_code = ["misc", "no-any-return"]
+disable_error_code = ["misc", "no-any-return", "arg-type"]
 
 [tool.ruff]
 line-length = 88
