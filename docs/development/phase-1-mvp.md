@@ -36,18 +36,18 @@
 
 ### 里程碑 1: 專案設置與環境配置 (`feature/phase-1-setup`)
 
-- [ ] 初始化 Poetry 專案。
-- [ ] 更新 `pyproject.toml` 和 `requirements.txt`，加入所有必要依賴。
-- [ ] 建立 `src` 目錄結構，遵循 Clean Architecture 原則。
-- [ ] 配置 `.env` 文件，管理 API keys。
-- [ ] 設置 `black`, `isort`, `mypy` 等代碼質量工具。
+- [x] 初始化 Poetry 專案。
+- [x] 更新 `pyproject.toml` 和 `requirements.txt`，加入所有必要依賴。
+- [x] 建立 `src` 目錄結構，遵循 Clean Architecture 原則。
+- [x] 配置 `.env` 文件，管理 API keys。
+- [x] 設置 `black`, `isort`, `mypy` 等代碼質量工具。
 
 ### 里程碑 2: 程式碼索引器 (`feature/code-indexer`)
 
-- [ ] **檔案加載器**: 實作一個能夠遞迴讀取指定目錄下程式碼文件的模組 (`file_processor.py`)。
+- [x] **檔案加載器**: 實作一個能夠遞迴讀取指定目錄下程式碼文件的模組 (`file_processor.py`)。
     - 支持的擴展名: `.py`, `.md`, `.js`, `.ts` 等。
-- [ ] **文本分割器**: 使用 `RecursiveCharacterTextSplitter`，並針對程式碼進行優化，使其盡可能按函數或類別邊界分割。
-- [ ] **索引腳本 (`scripts/index_repository.py`)**:
+- [x] **文本分割器**: 使用 `RecursiveCharacterTextSplitter`，並針對程式碼進行優化，使其盡可能按函數或類別邊界分割。
+- [x] **索引腳本 (`scripts/index_repository.py`)**:
     - 接收一個本地路徑作為參數。
     - 調用檔案加載器和文本分割器。
     - 使用嵌入模型生成向量。
@@ -55,25 +55,25 @@
 
 ### 里程碑 3: RAG 檢索與生成 (`feature/rag-retriever`)
 
-- [ ] **檢索器模組 (`core/retriever.py`)**:
+- [x] **檢索器模組 (`core/retriever.py`)**:
     - 連接到 ChromaDB。
     - 接收一個查詢字串，將其轉換為向量。
     - 執行相似性搜索，返回 `top_k` 個最相關的程式碼塊。
-- [ ] **LLM 客戶端 (`core/llm_client.py`)**:
+- [x] **LLM 客戶端 (`core/llm_client.py`)**:
     - 封裝與 OpenAI API 的互動。
-- [ ] **RAG 鏈**:
+- [x] **RAG 鏈**:
     - 建立一個 LangChain 表達式語言 (LCEL) 鏈。
     - 鏈的流程: `(Query -> Retriever -> Format Docs) | PromptTemplate | LLM | OutputParser`
 
 ### 里程碑 4: Streamlit 用戶介面 (`feature/streamlit-ui`)
 
-- [ ] **UI 佈局 (`ui/streamlit_app.py`)**:
+- [x] **UI 佈局 (`ui/streamlit_app.py`)**:
     - 標題和專案描述。
     - 一個文本輸入框用於提問。
     - 一個按鈕用於提交問題。
     - 一個區域用於顯示 LLM 的回答。
     - (可選) 一個擴展區域用於顯示檢索到的原始程式碼片段。
-- [ ] **後端邏輯**:
+- [x] **後端邏輯**:
     - 當用戶提交問題時，調用 RAG 鏈。
     - 將結果流式傳輸 (stream) 到前端介面，以改善用戶體驗。
 
@@ -96,3 +96,4 @@
 | 日期       | 版本 | 更新內容           | 更新人 |
 |------------|------|--------------------|--------|
 | 2025-07-24 | 1.0  | 初始版本建立       | Cline  |
+| 2025-07-25 | 1.1  | 更新所有已完成的里程碑狀態 | Cline  |
