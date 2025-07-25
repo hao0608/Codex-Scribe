@@ -2,7 +2,6 @@
 This module provides text splitting functionalities, optimized for source code.
 """
 
-import uuid
 from typing import Any
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -53,7 +52,7 @@ class CodeTextSplitter:
             start_line = content.count("\n", 0, content.find(text_chunk)) + 1
             end_line = start_line + text_chunk.count("\n")
 
-            chunk_id = str(uuid.uuid4())
+            chunk_id = CodeChunk.generate_id(file_path, text_chunk)
             metadata: dict[str, Any] = {
                 "file_path": file_path,
                 "start_line": start_line,

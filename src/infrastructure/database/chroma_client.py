@@ -70,6 +70,22 @@ class ChromaDBClient(CodeRepository):
             metadatas=metadatas,
         )
 
+    def get_existing_chunk_ids(self, chunk_ids: list[str]) -> set[str]:
+        """
+        Retrieves the set of chunk IDs that already exist in the collection.
+
+        Args:
+            chunk_ids: A list of chunk IDs to check.
+
+        Returns:
+            A set of IDs that are present in the database.
+        """
+        if not chunk_ids:
+            return set()
+
+        results = self.collection.get(ids=chunk_ids, include=[])
+        return set(results["ids"])
+
     def search(self, query_embedding: list[float], top_k: int = 5) -> list[CodeChunk]:
         """
         Searches for the most similar CodeChunks in the ChromaDB collection.

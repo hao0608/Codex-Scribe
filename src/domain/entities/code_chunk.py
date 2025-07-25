@@ -2,6 +2,7 @@
 This module defines the core domain entities for the Codex-Scribe project.
 """
 
+import hashlib
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -27,6 +28,14 @@ class CodeChunk(BaseModel):
     metadata: dict[str, Any] = Field(
         {}, description="Additional metadata, e.g., language, class/function name."
     )
+
+    @staticmethod
+    def generate_id(file_path: str, content: str) -> str:
+        """
+        Generates a deterministic ID for a code chunk based on its content and path.
+        """
+        content_hash = hashlib.md5(content.encode()).hexdigest()[:8]
+        return f"{file_path}::{content_hash}"
 
     class Config:
         """Pydantic configuration."""
