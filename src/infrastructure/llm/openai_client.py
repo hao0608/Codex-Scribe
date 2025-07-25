@@ -4,7 +4,6 @@ This module provides clients to interact with the OpenAI API, both sync and asyn
 
 import asyncio
 import os
-from typing import cast
 
 from openai import AsyncOpenAI, OpenAI
 
@@ -27,14 +26,14 @@ class OpenAIClient(EmbeddingService):
     ) -> list[float]:
         text = text.replace("\n", " ")
         response = self.client.embeddings.create(input=[text], model=model)
-        return cast(list[float], response.data[0].embedding)
+        return response.data[0].embedding
 
     def get_embeddings(
         self, texts: list[str], model: str = "text-embedding-3-small"
     ) -> list[list[float]]:
         texts = [text.replace("\n", " ") for text in texts]
         response = self.client.embeddings.create(input=texts, model=model)
-        return [cast(list[float], item.embedding) for item in response.data]
+        return [item.embedding for item in response.data]
 
     def get_chat_completion(
         self,
@@ -50,7 +49,7 @@ class OpenAIClient(EmbeddingService):
             ],
         )
         if response.choices and response.choices[0].message:
-            return cast(str | None, response.choices[0].message.content)
+            return response.choices[0].message.content
         return None
 
 
@@ -72,7 +71,7 @@ class AsyncOpenAIClient(EmbeddingService):
         response = sync_client.embeddings.create(
             input=[text.replace("\n", " ")], model="text-embedding-3-small"
         )
-        return cast(list[float], response.data[0].embedding)
+        return response.data[0].embedding
 
     async def get_embeddings_async(
         self, texts: list[str], model: str = "text-embedding-3-small"
@@ -82,7 +81,7 @@ class AsyncOpenAIClient(EmbeddingService):
         """
         texts = [text.replace("\n", " ") for text in texts]
         response = await self.async_client.embeddings.create(input=texts, model=model)
-        return [cast(list[float], item.embedding) for item in response.data]
+        return [item.embedding for item in response.data]
 
     def get_embeddings(
         self, texts: list[str], model: str = "text-embedding-3-small"

@@ -60,10 +60,12 @@ warn_unused_configs = true
 ignore_missing_imports = true
 strict = true
 plugins = ["pydantic.mypy"]
-disable_error_code = ["misc"]
+disable_error_code = ["misc", "no-any-return"]
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "C4", "B"]
 ignore = ["E501", "E402"]
 
