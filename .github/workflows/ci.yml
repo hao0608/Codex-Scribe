@@ -49,5 +49,6 @@ jobs:
           python-version: 3.12
       - run: |
           pip install poetry
-          poetry install
+          poetry install --no-root
+
       - run: poetry run mkdocs gh-deploy --force
