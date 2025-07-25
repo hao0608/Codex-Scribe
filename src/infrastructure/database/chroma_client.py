@@ -3,7 +3,7 @@ This module provides a client to interact with a ChromaDB vector database.
 """
 
 import chromadb
-from chromadb.types import Collection
+from chromadb.api.models.Collection import Collection
 
 from src.domain.entities.code_chunk import CodeChunk
 from src.domain.repositories.code_repository import CodeRepository
