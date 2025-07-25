@@ -40,42 +40,47 @@ class AnswerQuestionUseCase:
         Returns:
             The generated answer.
         """
-        print(f"Received query: {query}")
+        try:
+            print(f"Received query: {query}")
 
-        # 1. Create an embedding for the query
-        query_embedding = self.embedding_service.get_embedding(query)
-        print("Generated query embedding.")
+            # 1. Create an embedding for the query
+            query_embedding = self.embedding_service.get_embedding(query)
+            print("Generated query embedding.")
 
-        # 2. Retrieve relevant code chunks
-        retrieved_chunks = self.code_repository.search(query_embedding, top_k=5)
-        if not retrieved_chunks:
-            return "I couldn't find any relevant information in the codebase to answer your question."
+            # 2. Retrieve relevant code chunks
+            retrieved_chunks = self.code_repository.search(query_embedding, top_k=5)
+            if not retrieved_chunks:
+                return "I couldn't find any relevant information in the codebase to answer your question."
 
-        print(f"Retrieved {len(retrieved_chunks)} relevant chunks.")
+            print(f"Retrieved {len(retrieved_chunks)} relevant chunks.")
 
-        # 3. Build the context and prompt
-        context = "\n\n---\n\n".join([chunk.content for chunk in retrieved_chunks])
+            # 3. Build the context and prompt
+            context = "\n\n---\n\n".join([chunk.content for chunk in retrieved_chunks])
 
-        system_message = (
-            "你是一位專業的軟體開發專家與 AI 助理。"
-            "請分析以下程式碼上下文來回答使用者的問題。"
-            "請提供清晰、簡潔的答案，並在適當時附上相關的程式碼片段。"
-            "請務必使用繁體中文（台灣）進行回覆。"
-        )
+            system_message = (
+                "你是一位專業的軟體開發專家與 AI 助理。"
+                "請分析以下程式碼上下文來回答使用者的問題。"
+                "請提供清晰、簡潔的答案，並在適當時附上相關的程式碼片段。"
+                "請務必使用繁體中文（台灣）進行回覆。"
+            )
 
-        prompt = f"""
-        Context:
-        ---
-        {context}
-        ---
-        Question: {query}
-        """
+            prompt = f"""
+            Context:
+            ---
+            {context}
+            ---
+            Question: {query}
+            """
 
-        # 4. Generate the answer
-        print("Generating answer from LLM...")
-        answer = self.llm_client.get_chat_completion(
-            prompt=prompt,
-            system_message=system_message,
-        )
+            # 4. Generate the answer
+            print("Generating answer from LLM...")
+            answer = self.llm_client.get_chat_completion(
+                prompt=prompt,
+                system_message=system_message,
+            )
 
-        return answer or "I was unable to generate an answer."
+            return answer or "I was unable to generate an answer."
+        except Exception as e:
+            print(f"An unexpected error occurred during question answering: {e}")
+            # In a real app, you might want to return a more user-friendly error message.
+            return "Sorry, an error occurred while processing your request."
