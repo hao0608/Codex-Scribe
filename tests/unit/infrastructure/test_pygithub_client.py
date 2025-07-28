@@ -3,7 +3,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from github import GithubException
 
-from src.domain.services.github_service import GitHubIssueDraft, GitHubServiceError
+from src.domain.entities.github_issue_draft import GitHubIssueDraft
+from src.domain.services.github_service import GitHubServiceError
 from src.infrastructure.github.pygithub_client import PyGitHubClient
 
 

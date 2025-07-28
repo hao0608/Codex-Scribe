@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 from src.application.use_cases.create_issue_from_text import CreateIssueFromTextUseCase
-from src.domain.services.github_service import GitHubIssueDraft
+from src.domain.entities.github_issue_draft import GitHubIssueDraft
 
 
 def test_create_issue_from_text_use_case() -> None:

@@ -41,12 +41,12 @@
 
 ### 里程碑 2: LLM 結構化輸出 (`feature/structured-output`)
 
-- [x] **Pydantic 模型**: 在 `src/domain/entities` 中定義一個 `GitHubIssueDraft` Pydantic 模型，包含 `title`, `body`, `labels` 欄位。
+- [x] **Pydantic 模型**: 在 `src/domain/entities/github_issue_draft.py` 中定義一個 `GitHubIssueDraft` Pydantic 模型，包含 `title`, `body`, `labels` 欄位。
 - [x] **輸出解析器**: 使用 LangChain 的 `PydanticOutputParser` 來確保 LLM 的輸出嚴格符合 `GitHubIssueDraft` 模型。
 - [x] **提示工程優化**:
-    - 修改 RAG 鏈中的提示模板。
-    - 明確指示 LLM 根據上下文分析，並以指定的 JSON 格式輸出結果。
-    - 在提示中提供 JSON 格式的範例 (few-shot)。
+    - **忠實性**: 指示 AI 優先考慮用戶的原始回饋，避免產生幻覺。
+    - **結構化**: 要求 AI 在 issue 主體中包含 "User Report", "Proposed Solution", "Tasks" 等部分。
+    - **Few-shot 範例**: 在提示中提供一個完整的範例，來引導 AI 學習期望的輸出格式。
 
 ### 里程碑 3: FastAPI 觸發器 (`feature/api-trigger`)
 
@@ -77,3 +77,4 @@
 |------------|------|--------------------|--------|
 | 2025-07-24 | 1.0  | 初始版本建立       | Cline  |
 | 2025-07-28 | 2.0  | 完成第二階段開發   | Cline  |
+| 2025-07-28 | 2.1  | 更新文檔以反映重構 | Cline  |
