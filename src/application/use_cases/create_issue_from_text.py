@@ -6,9 +6,10 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSerializable
 
+from src.domain.entities.github_issue_draft import GitHubIssueDraft
 from src.domain.repositories.code_repository import CodeRepository
 from src.domain.services.embedding_service import EmbeddingService
-from src.domain.services.github_service import GitHubIssueDraft, GitHubService
+from src.domain.services.github_service import GitHubService
 
 
 class CreateIssueFromTextUseCase:

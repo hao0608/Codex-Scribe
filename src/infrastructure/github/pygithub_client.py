@@ -8,11 +8,8 @@ import os
 from github import Github, GithubException
 from github.Repository import Repository
 
-from src.domain.services.github_service import (
-    GitHubIssueDraft,
-    GitHubService,
-    GitHubServiceError,
-)
+from src.domain.entities.github_issue_draft import GitHubIssueDraft
+from src.domain.services.github_service import GitHubService, GitHubServiceError
 
 logger = logging.getLogger(__name__)
 
