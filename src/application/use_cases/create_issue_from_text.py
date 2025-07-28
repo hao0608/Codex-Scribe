@@ -18,7 +18,7 @@ class CreateIssueFromTextUseCase:
 
     def __init__(
         self,
-        llm: RunnableSerializable,
+        llm: RunnableSerializable[dict, str],
         embedding_service: EmbeddingService,
         code_repository: CodeRepository,
         github_service: GitHubService,
@@ -27,7 +27,9 @@ class CreateIssueFromTextUseCase:
         self.embedding_service = embedding_service
         self.code_repository = code_repository
         self.github_service = github_service
-        self.parser = PydanticOutputParser(pydantic_object=GitHubIssueDraft)
+        self.parser: PydanticOutputParser[GitHubIssueDraft] = PydanticOutputParser(
+            pydantic_object=GitHubIssueDraft
+        )
 
     def execute(self, text: str) -> str:
         """
