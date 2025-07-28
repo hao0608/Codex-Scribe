@@ -45,6 +45,8 @@ class CreateIssueFromTextUseCase:
         You are an expert at analyzing user feedback and creating high-quality GitHub issues.
         Based on the user's feedback and the provided code context, create a GitHub issue.
 
+        **IMPORTANT**: Always include the 'ai-draft' and 'needs-review' labels in your response.
+
         User Feedback:
         {text}
 
