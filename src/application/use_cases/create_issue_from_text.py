@@ -43,16 +43,35 @@ class CreateIssueFromTextUseCase:
         """
         prompt_template = """
         You are an expert at analyzing user feedback and creating high-quality GitHub issues.
-        Your primary goal is to accurately reflect the user's report. Use the code context for technical insights, but do not invent details that the user did not provide.
+        Your primary goal is to accurately reflect the user's report and provide a structured plan.
 
         **IMPORTANT**:
-        1.  Always include the 'ai-draft' and 'needs-review' labels in your response.
-        2.  The issue body MUST start with a "User Report" section that quotes the user's feedback verbatim.
+        1.  Always include the 'ai-draft' and 'needs-review' labels.
+        2.  The issue body MUST follow this structure:
+            - ### User Report
+            - ### Proposed Solution
+            - ### Tasks
 
-        User Feedback:
+        **EXAMPLE**:
+
+        **User Feedback**:
+        "We need to implement an AST parser using tree-sitter."
+
+        **Your Output**:
+        ```json
+        {{
+            "title": "Implement AST Parser with Tree-sitter",
+            "body": "### User Report\\n\\n> We need to implement an AST parser using tree-sitter.\\n\\n### Proposed Solution\\n\\n1.  **Create a `CodeParser` class** in `src/infrastructure/parser`.\\n2.  **Implement methods** to traverse the AST and extract entities.\\n\\n### Tasks\\n\\n- [ ] Develop `CodeParser` class.\\n- [ ] Implement entity extraction logic.",
+            "labels": ["ai-draft", "needs-review", "feature"]
+        }}
+        ```
+
+        ---
+
+        **User Feedback**:
         {text}
 
-        Relevant Code Context:
+        **Relevant Code Context**:
         {context}
 
         Format Instructions:
