@@ -1,25 +1,23 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
+import pytest
 from fastapi.testclient import TestClient
 
-from src.presentation.api.main import app
+from src.application.use_cases.create_issue_from_text import CreateIssueFromTextUseCase
+from src.presentation.api.main import app, get_create_issue_use_case
 
 client = TestClient(app)
 
 
-@patch("src.presentation.api.main.PyGitHubClient")
-@patch("src.presentation.api.main.ChromaDBClient")
-@patch("src.presentation.api.main.OpenAIClient")
-@patch("src.presentation.api.main.CreateIssueFromTextUseCase")
-def test_analyze_and_create_issue_success(
-    mock_use_case: MagicMock,
-    mock_openai: MagicMock,
-    mock_chroma: MagicMock,
-    mock_github: MagicMock,
-) -> None:
+@pytest.fixture
+def mock_use_case() -> MagicMock:
+    return MagicMock(spec=CreateIssueFromTextUseCase)
+
+
+def test_analyze_and_create_issue_success(mock_use_case: MagicMock) -> None:
     # Arrange
-    mock_use_case_instance = mock_use_case.return_value
-    mock_use_case_instance.execute.return_value = "http://example.com/issue/1"
+    mock_use_case.execute.return_value = "http://example.com/issue/1"
+    app.dependency_overrides[get_create_issue_use_case] = lambda: mock_use_case
 
     # Act
     response = client.post(
@@ -30,22 +28,16 @@ def test_analyze_and_create_issue_success(
     # Assert
     assert response.status_code == 200
     assert response.json() == {"issue_url": "http://example.com/issue/1"}
-    mock_use_case_instance.execute.assert_called_once_with("This is a test feedback.")
+    mock_use_case.execute.assert_called_once_with("This is a test feedback.")
+
+    # Clean up
+    app.dependency_overrides.clear()
 
 
-@patch("src.presentation.api.main.PyGitHubClient")
-@patch("src.presentation.api.main.ChromaDBClient")
-@patch("src.presentation.api.main.OpenAIClient")
-@patch("src.presentation.api.main.CreateIssueFromTextUseCase")
-def test_analyze_and_create_issue_failure(
-    mock_use_case: MagicMock,
-    mock_openai: MagicMock,
-    mock_chroma: MagicMock,
-    mock_github: MagicMock,
-) -> None:
+def test_analyze_and_create_issue_failure(mock_use_case: MagicMock) -> None:
     # Arrange
-    mock_use_case_instance = mock_use_case.return_value
-    mock_use_case_instance.execute.side_effect = Exception("Test error")
+    mock_use_case.execute.side_effect = Exception("Test error")
+    app.dependency_overrides[get_create_issue_use_case] = lambda: mock_use_case
 
     # Act
     response = client.post(
@@ -56,3 +48,6 @@ def test_analyze_and_create_issue_failure(
     # Assert
     assert response.status_code == 500
     assert "An unexpected error occurred: Test error" in response.json()["detail"]
+
+    # Clean up
+    app.dependency_overrides.clear()
