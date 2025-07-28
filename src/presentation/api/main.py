@@ -4,6 +4,7 @@ This module defines the main FastAPI application and its endpoints.
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
+from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
 from src.application.use_cases.create_issue_from_text import CreateIssueFromTextUseCase
@@ -36,7 +37,7 @@ def analyze_and_create_issue(request: AnalysisRequest) -> AnalysisResponse:
     """
     try:
         # In a real application, these dependencies would be injected.
-        llm = OpenAIClient()
+        llm = ChatOpenAI(model="gpt-4o", temperature=0)
         embedding_service = OpenAIClient()
         code_repository = ChromaDBClient()
         github_service = PyGitHubClient()
