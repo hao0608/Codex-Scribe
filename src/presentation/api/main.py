@@ -2,6 +2,7 @@
 This module defines the main FastAPI application and its endpoints.
 """
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -10,6 +11,8 @@ from src.domain.services.github_service import GitHubServiceError
 from src.infrastructure.database.chroma_client import ChromaDBClient
 from src.infrastructure.github.pygithub_client import PyGitHubClient
 from src.infrastructure.llm.openai_client import OpenAIClient
+
+load_dotenv()
 
 app = FastAPI(
     title="Codex-Scribe API",
