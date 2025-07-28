@@ -43,9 +43,11 @@ class CreateIssueFromTextUseCase:
         """
         prompt_template = """
         You are an expert at analyzing user feedback and creating high-quality GitHub issues.
-        Based on the user's feedback and the provided code context, create a GitHub issue.
+        Your primary goal is to accurately reflect the user's report. Use the code context for technical insights, but do not invent details that the user did not provide.
 
-        **IMPORTANT**: Always include the 'ai-draft' and 'needs-review' labels in your response.
+        **IMPORTANT**:
+        1.  Always include the 'ai-draft' and 'needs-review' labels in your response.
+        2.  The issue body MUST start with a "User Report" section that quotes the user's feedback verbatim.
 
         User Feedback:
         {text}
