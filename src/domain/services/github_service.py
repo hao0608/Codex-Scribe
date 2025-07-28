@@ -4,17 +4,29 @@ This module defines the abstract interface for a GitHub service.
 
 from abc import ABC, abstractmethod
 
+from pydantic import BaseModel, Field
 
-class GitHubIssueDraft:
+
+class GitHubIssueDraft(BaseModel):
     """
-    A simple data class for GitHub issue drafts.
-    We will replace this with a Pydantic model in a later stage.
+    A Pydantic model for GitHub issue drafts.
     """
 
-    def __init__(self, title: str, body: str, labels: list[str]):
-        self.title = title
-        self.body = body
-        self.labels = labels
+    title: str = Field(
+        ...,
+        min_length=10,
+        max_length=200,
+        description="The title of the GitHub issue.",
+    )
+    body: str = Field(
+        ...,
+        min_length=50,
+        description="The body of the GitHub issue, in Markdown format.",
+    )
+    labels: list[str] = Field(
+        default_factory=lambda: ["ai-draft", "needs-review"],
+        description="A list of labels to apply to the issue.",
+    )
 
 
 class GitHubService(ABC):
