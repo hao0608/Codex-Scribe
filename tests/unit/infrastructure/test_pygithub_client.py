@@ -59,14 +59,20 @@ def test_create_issue_success(mock_getenv: MagicMock, mock_github: MagicMock) ->
     mock_github.return_value.get_repo.return_value = mock_repo
 
     client = PyGitHubClient()
-    draft = GitHubIssueDraft(title="Test Title", body="Test Body", labels=["bug"])
+    draft = GitHubIssueDraft(
+        title="This is a test title for the issue",
+        body="This is a test body for the issue, which is sufficiently long.",
+        labels=["bug"],
+    )
 
     issue_url = client.create_issue(draft)
 
     assert issue_url == "http://example.com/issue/1"
     mock_github.return_value.get_repo.assert_called_once_with("fake_owner/fake_repo")
     mock_repo.create_issue.assert_called_once_with(
-        title="Test Title", body="Test Body", labels=["bug"]
+        title="This is a test title for the issue",
+        body="This is a test body for the issue, which is sufficiently long.",
+        labels=["bug"],
     )
 
 
@@ -79,7 +85,11 @@ def test_create_issue_failure(mock_getenv: MagicMock, mock_github: MagicMock) ->
     mock_github.return_value.get_repo.return_value = mock_repo
 
     client = PyGitHubClient()
-    draft = GitHubIssueDraft(title="Test Title", body="Test Body", labels=["bug"])
+    draft = GitHubIssueDraft(
+        title="This is a test title for the issue",
+        body="This is a test body for the issue, which is sufficiently long.",
+        labels=["bug"],
+    )
 
     with pytest.raises(GitHubServiceError, match="Failed to create GitHub issue"):
         client.create_issue(draft)
