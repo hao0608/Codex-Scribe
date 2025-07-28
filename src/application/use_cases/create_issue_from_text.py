@@ -18,7 +18,7 @@ class CreateIssueFromTextUseCase:
 
     def __init__(
         self,
-        llm: RunnableSerializable[dict, str],
+        llm: RunnableSerializable[dict[str, str], str],
         embedding_service: EmbeddingService,
         code_repository: CodeRepository,
         github_service: GitHubService,
