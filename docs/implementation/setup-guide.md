@@ -46,7 +46,7 @@ poetry install
     *如果 `.env.example` 不存在，請手動創建 `.env` 文件。*
 
 2.  編輯 `.env` 文件，並填入您的 API 金鑰：
-    ```dotenv
+    ```text
     # .env
     # OpenAI API Key
     OPENAI_API_KEY="sk-..."

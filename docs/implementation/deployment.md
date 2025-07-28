@@ -25,17 +25,17 @@ graph TD
     subgraph AWS Cloud
         subgraph VPC
             C[API Gateway] --> D{Elastic Load Balancer};
-            D --> E["ECS Fargate\n(API Service)"];
+            D --> E["ECS Fargate <br> (API Service)"];
             B -- Deploy --> E;
-            B -- Build & Push --> F["ECR\n(Docker Image Registry)"];
+            B -- Build & Push --> F["ECR <br> (Docker Image Registry)"];
             E -- Pull Image --> F;
-            
-            G["EventBridge\n(Scheduled Rule)"] --> H["Lambda Function\n(Trigger Indexing)"];
+
+            G["EventBridge <br> (Scheduled Rule)"] --> H["Lambda Function <br> (Trigger Indexing)"];
             B -- Deploy --> H;
-            H --> I["ECS Task\n(Indexing Service)"];
+            H --> I["ECS Task <br> (Indexing Service)"];
             I -- Pull Image --> F;
 
-            E --> J["(Database\nRDS/Managed DB)"];
+            E --> J["(Database <br> RDS/Managed DB)"];
             I --> J;
         end
     end
