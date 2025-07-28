@@ -34,7 +34,7 @@ class PyGitHubClient(GitHubService):
             )
 
         self.github = Github(self.token)
-        self._repo = None
+        self._repo: Repository | None = None
 
     def _get_repo(self) -> Repository:
         if self._repo is None:
