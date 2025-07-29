@@ -8,8 +8,10 @@ from tqdm.asyncio import tqdm_asyncio
 
 from src.domain.entities.code_chunk import CodeChunk
 from src.infrastructure.database.chroma_client import ChromaDBClient
+from src.infrastructure.database.graph_db import Neo4jService
 from src.infrastructure.file_processor import FileProcessor
 from src.infrastructure.llm.openai_client import AsyncOpenAIClient
+from src.infrastructure.parser.code_parser import CodeParser
 from src.infrastructure.text_splitter import CodeTextSplitter
 
 
@@ -23,12 +25,16 @@ class IndexRepositoryUseCase:
         file_processor: FileProcessor,
         text_splitter: CodeTextSplitter,
         embedding_client: AsyncOpenAIClient,
-        code_repository: ChromaDBClient,  # Type hint specifically for get_existing_chunk_ids
+        code_repository: ChromaDBClient,
+        graph_repository: Neo4jService,
+        code_parser: CodeParser,
     ):
         self.file_processor = file_processor
         self.text_splitter = text_splitter
         self.embedding_client = embedding_client
         self.code_repository = code_repository
+        self.graph_repository = graph_repository
+        self.code_parser = code_parser
 
     async def execute(
         self, directory_path: str, include_dirs: list[str] | None = None
@@ -43,6 +49,22 @@ class IndexRepositoryUseCase:
 
             file_contents = self.file_processor.read_files(directory_path, include_dirs)
             print(f"Found {len(file_contents)} files to process.")
+
+            # --- Knowledge Graph Construction ---
+            print("Parsing files and building knowledge graph...")
+            self.graph_repository.clear_database()
+            for file_path, content in tqdm_asyncio(
+                file_contents.items(), desc="Parsing Files"
+            ):
+                if not content.strip():
+                    continue
+                parsed_data = self.code_parser.parse(file_path, content)
+                for node in parsed_data.nodes:
+                    self.graph_repository.add_node(node)
+                for edge in parsed_data.edges:
+                    self.graph_repository.add_edge(edge)
+            print("Knowledge graph construction complete.")
+            # --- End of Knowledge Graph Construction ---
 
             all_chunks = []
             for file_path, content in file_contents.items():
