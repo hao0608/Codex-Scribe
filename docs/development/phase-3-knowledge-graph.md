@@ -31,22 +31,22 @@
 
 ### 里程碑 1: AST 解析器與實體提取 (`feature/ast-parser`)
 
-- [ ] **安裝 `tree-sitter`**: 將 `tree-sitter` 和對應的語言文法（如 `tree-sitter-python`）整合到專案中。
-- [ ] **解析器模組 (`src/infrastructure/parser`)**:
+- [x] **安裝 `tree-sitter`**: 將 `tree-sitter` 和對應的語言文法（如 `tree-sitter-python`）整合到專案中。
+- [x] **解析器模組 (`src/infrastructure/parser`)**:
     - 建立一個 `CodeParser` 類別。
     - 實作方法來遍歷 AST 並提取節點資訊。
-- [ ] **實體提取邏輯**:
+- [x] **實體提取邏輯**:
     - 提取文件中的 `import` 語句。
     - 提取 `class` 和 `function` 的定義。
     - 提取函數內部的 `function call`。
-- [ ] **輸出**: 解析器的輸出應該是結構化的 Pydantic 物件列表，代表從單一文件中提取的所有實體和關係。
+- [x] **輸出**: 解析器的輸出應該是結構化的 Pydantic 物件列表，代表從單一文件中提取的所有實體和關係。
 
-- [ ] **修正與增強 `CodeParser`**:
-    - [ ] **修正呼叫來源識別**: 實作範圍追蹤，正確識別函式呼叫的來源 (函式或類別)。
-    - [ ] **修正單元測試**: 更新測試斷言，使其符合程式碼的實際行為。
-    - [ ] **改進類別-方法關係**: 為類別內的方法建立從 `ClassNode` 到 `FunctionNode` 的 `CONTAINS` 關係。
-    - [ ] **支援裝飾器**: 更新查詢以支援被裝飾的類別和函式。
-    - [ ] **效能優化**: 使用 `set` 提高重複節點的檢查效率。
+- [x] **修正與增強 `CodeParser`**:
+    - [x] **修正呼叫來源識別**: 實作範圍追蹤，正確識別函式呼叫的來源 (函式或類別)。
+    - [x] **修正單元測試**: 更新測試斷言，使其符合程式碼的實際行為。
+    - [x] **改進類別-方法關係**: 為類別內的方法建立從 `ClassNode` 到 `FunctionNode` 的 `CONTAINS` 關係。
+    - [x] **支援裝飾器**: 更新查詢以支援被裝飾的類別和函式。
+    - [x] **效能優化**: 使用 `set` 提高重複節點的檢查效率。
 
 ### 里程碑 2: Neo4j 知識圖譜構建 (`feature/knowledge-graph`)
 
@@ -63,7 +63,7 @@
 
 ### 里程碑 3: 混合式檢索與查詢 (`feature/hybrid-search`)
 
-- [ ] **圖形查詢工具**:
+- [x] **圖形查詢工具**:
     - 在 `src/application/use_cases` 中建立一個新的工具 `GraphQueryTool`。
     - 該工具接收結構化查詢（或簡化的自然語言），將其轉換為 Cypher 查詢語句。
     - 範例查詢: "Find all functions that call the `process_payment` function."
