@@ -50,11 +50,11 @@
 
 ### 里程碑 2: Neo4j 知識圖譜構建 (`feature/knowledge-graph`)
 
-- [ ] **設置 Neo4j**: 提供 Docker Compose 配置，以便在本地快速啟動一個 Neo4j 實例。
-- [ ] **圖形資料庫服務 (`src/infrastructure/database/graph_db.py`)**:
+- [x] **設置 Neo4j**: 提供 Docker Compose 配置，以便在本地快速啟動一個 Neo4j 實例。
+- [x] **圖形資料庫服務 (`src/infrastructure/database/graph_db.py`)**:
     - 建立一個 `Neo4jService` 來封裝與資料庫的連接和查詢操作。
     - 實作 `add_node` 和 `add_edge` 等基本方法。
-- [ ] **更新索引管道 (`scripts/index_repository.py`)**:
+- [x] **更新索引管道 (`scripts/index_repository.py`)**:
     - 在現有的索引流程中加入一個新步驟。
     - 在生成向量嵌入之後，調用 `CodeParser`。
     - 將解析出的實體和關係通過 `Neo4jService` 寫入圖形資料庫。
