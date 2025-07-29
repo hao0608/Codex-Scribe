@@ -42,8 +42,13 @@ class AnswerQuestionUseCase:
             if match:
                 return "graph_query_callers", {"function_name": match.group(1)}
 
-        if re.search(r"methods in|包含哪些方法", query, re.IGNORECASE):
+        if re.search(r"methods in|方法在", query, re.IGNORECASE):
             # Example: "What methods are in the 'User' class?"
+            match = re.search(r"['\"](.+)['\"]", query)
+            if match:
+                return "graph_query_methods", {"class_name": match.group(1)}
+
+        if re.search(r"what methods are in the", query, re.IGNORECASE):
             match = re.search(r"['\"](.+)['\"]", query)
             if match:
                 return "graph_query_methods", {"class_name": match.group(1)}
