@@ -98,6 +98,9 @@ class CodeParser:
         nodes: dict[str, BaseNode] = {}
         edges: list[BaseEdge] = []
 
+        # Temporary map to hold non-serializable node objects for scope analysis
+        node_map: dict[str, Node] = {}
+
         # 1. Create File Node
         file_id = file_path
         nodes[file_id] = FileNode(id=file_id, properties={"path": file_path})
@@ -108,21 +111,24 @@ class CodeParser:
             nodes[class_node.id] = class_node
             edges.append(ContainsEdge(source_id=file_id, target_id=class_node.id))
 
-        function_nodes = self._extract_functions(root_node, file_id)
+        function_nodes = self._extract_functions(root_node, file_id, node_map)
         for func_node in function_nodes:
             nodes[func_node.id] = func_node
 
             # Determine if the function is a method of a class
-            scope_id = self._find_containing_scope(
-                file_id, func_node.properties["node"]
-            )
-
-            # If the scope is a class, the class contains the method
-            if scope_id in nodes and isinstance(nodes[scope_id], ClassNode):
-                edges.append(ContainsEdge(source_id=scope_id, target_id=func_node.id))
-            else:
-                # Only add file containment if it's not a class method
-                edges.append(ContainsEdge(source_id=file_id, target_id=func_node.id))
+            ts_node = node_map.get(func_node.id)
+            if ts_node:
+                scope_id = self._find_containing_scope(file_id, ts_node)
+                # If the scope is a class, the class contains the method
+                if scope_id in nodes and isinstance(nodes[scope_id], ClassNode):
+                    edges.append(
+                        ContainsEdge(source_id=scope_id, target_id=func_node.id)
+                    )
+                else:
+                    # Only add file containment if it's not a class method
+                    edges.append(
+                        ContainsEdge(source_id=file_id, target_id=func_node.id)
+                    )
 
         # 3. Extract relationships (Imports, Calls)
         import_edges = self._extract_imports(root_node, file_id)
@@ -151,7 +157,9 @@ class CodeParser:
                 nodes.append(ClassNode(id=class_id, properties={"name": class_name}))
         return nodes
 
-    def _extract_functions(self, root_node: Node, file_id: str) -> list[FunctionNode]:
+    def _extract_functions(
+        self, root_node: Node, file_id: str, node_map: dict[str, Node]
+    ) -> list[FunctionNode]:
         """Extracts function nodes from the AST."""
         nodes = []
         seen_func_ids = set()
@@ -167,13 +175,15 @@ class CodeParser:
                 func_id = f"{file_id}::{func_name}"
 
                 if func_id not in seen_func_ids:
-                    # Store the actual node for later scope analysis
+                    # Do not store the non-serializable node object in properties
                     nodes.append(
                         FunctionNode(
                             id=func_id,
-                            properties={"name": func_name, "node": func_def_node},
+                            properties={"name": func_name},
                         )
                     )
+                    # Store the tree-sitter node in a temporary map for scope analysis
+                    node_map[func_id] = func_def_node
                     seen_func_ids.add(func_id)
         return nodes
 
