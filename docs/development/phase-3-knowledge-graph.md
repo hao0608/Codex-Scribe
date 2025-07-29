@@ -67,9 +67,9 @@
     - 在 `src/application/use_cases` 中建立一個新的工具 `GraphQueryTool`。
     - 該工具接收結構化查詢（或簡化的自然語言），將其轉換為 Cypher 查詢語句。
     - 範例查詢: "Find all functions that call the `process_payment` function."
-- [ ] **升級代理程式協調器**:
+- [x] **升級代理程式協調器**:
     - 將 `GraphQueryTool` 添加到代理程式可用的工具列表中。
-- [ ] **優化任務規劃器**:
+- [x] **優化任務規劃器**:
     - 調整任務規劃器的提示，使其能夠識別需要進行圖形查詢的問題類型。
     - 代理程式現在可以決定是使用 `VectorSearchTool` 還是 `GraphQueryTool`。
     - **範例決策**:
