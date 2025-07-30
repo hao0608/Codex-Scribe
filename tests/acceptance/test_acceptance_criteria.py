@@ -41,7 +41,7 @@ def test_indexing_pipeline_creates_nodes_and_relationships(
     )
     assert process.returncode == 0, f"Indexing script failed: {process.stderr}"
 
-    use_case = GraphQueryUseCase(real_neo4j_service)
+    use_case = GraphQueryUseCase(real_neo4j_service._driver)
     query = "MATCH (n) RETURN count(n) as count"
 
     # Act
@@ -60,7 +60,7 @@ def test_cypher_query_finds_function_callers(
     This is a placeholder and depends on the indexed data.
     """
     # Arrange
-    use_case = GraphQueryUseCase(real_neo4j_service)
+    use_case = GraphQueryUseCase(real_neo4j_service._driver)
 
     # Act
     # Assuming 'parse' is a function in the indexed data
