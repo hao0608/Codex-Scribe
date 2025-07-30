@@ -54,12 +54,14 @@ def parsed_data(parser: CodeParser) -> ParsedData:
     return parser.parse(file_path, SAMPLE_CODE)
 
 
+@pytest.mark.unit
 def test_parser_initialization(parser: CodeParser) -> None:
     """Tests that the CodeParser initializes correctly."""
     assert parser is not None
     assert parser.parser is not None
 
 
+@pytest.mark.unit
 def test_file_node_creation(parsed_data: ParsedData) -> None:
     """Tests that a FileNode is correctly created."""
     file_node = next((n for n in parsed_data.nodes if n.type == NodeType.FILE), None)
@@ -68,6 +70,7 @@ def test_file_node_creation(parsed_data: ParsedData) -> None:
     assert file_node.id == "test_module.py"
 
 
+@pytest.mark.unit
 def test_class_node_extraction(parsed_data: ParsedData) -> None:
     """Tests that class nodes are correctly extracted."""
     class_nodes = [n for n in parsed_data.nodes if isinstance(n, ClassNode)]
@@ -77,6 +80,7 @@ def test_class_node_extraction(parsed_data: ParsedData) -> None:
     assert "AnotherClass" in class_names
 
 
+@pytest.mark.unit
 def test_function_node_extraction(parsed_data: ParsedData) -> None:
     """Tests that function and method nodes are correctly extracted."""
     func_nodes = [n for n in parsed_data.nodes if isinstance(n, FunctionNode)]
@@ -87,6 +91,7 @@ def test_function_node_extraction(parsed_data: ParsedData) -> None:
     assert "helper_function" in func_names
 
 
+@pytest.mark.unit
 def test_contains_edge_creation(parsed_data: ParsedData) -> None:
     """Tests that CONTAINS edges from file to entities are created."""
     contains_edges = [e for e in parsed_data.edges if isinstance(e, ContainsEdge)]
@@ -112,6 +117,7 @@ def test_contains_edge_creation(parsed_data: ParsedData) -> None:
     assert "test_module.py::MyClass -> test_module.py::method_a" in edge_map
 
 
+@pytest.mark.unit
 def test_import_edge_extraction(parsed_data: ParsedData) -> None:
     """Tests that IMPORTS edges are correctly extracted."""
     import_edges = [e for e in parsed_data.edges if isinstance(e, ImportsEdge)]
@@ -121,6 +127,7 @@ def test_import_edge_extraction(parsed_data: ParsedData) -> None:
     assert "sys" in imported_modules
 
 
+@pytest.mark.unit
 def test_call_edge_extraction(parsed_data: ParsedData) -> None:
     """Tests that CALLS edges are correctly extracted."""
     call_edges = [e for e in parsed_data.edges if isinstance(e, CallsEdge)]
@@ -144,6 +151,7 @@ def test_call_edge_extraction(parsed_data: ParsedData) -> None:
     assert "test_module.py -> test_module.py::method_a" in calls_map
 
 
+@pytest.mark.unit
 def test_full_parse_node_and_edge_counts(parsed_data: ParsedData) -> None:
     """Checks the total number of nodes and edges from a full parse."""
     # 1 FileNode + 2 ClassNodes + 3 FunctionNodes = 6 nodes

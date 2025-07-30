@@ -8,6 +8,7 @@ from src.domain.services.github_service import GitHubServiceError
 from src.infrastructure.github.pygithub_client import PyGitHubClient
 
 
+@pytest.mark.unit
 @patch("src.infrastructure.github.pygithub_client.Github")
 @patch("os.getenv")
 def test_pygithub_client_initialization_success(
@@ -22,6 +23,7 @@ def test_pygithub_client_initialization_success(
     mock_github.assert_called_once_with("fake_token")
 
 
+@pytest.mark.unit
 @patch("os.getenv")
 def test_pygithub_client_initialization_no_token(mock_getenv: MagicMock) -> None:
     mock_getenv.side_effect = [None, "fake_owner/fake_repo"]
@@ -29,6 +31,7 @@ def test_pygithub_client_initialization_no_token(mock_getenv: MagicMock) -> None
         PyGitHubClient()
 
 
+@pytest.mark.unit
 @patch("os.getenv")
 def test_pygithub_client_initialization_no_repo(mock_getenv: MagicMock) -> None:
     mock_getenv.side_effect = ["fake_token", None]
@@ -36,6 +39,7 @@ def test_pygithub_client_initialization_no_repo(mock_getenv: MagicMock) -> None:
         PyGitHubClient()
 
 
+@pytest.mark.unit
 @patch("src.infrastructure.github.pygithub_client.Github")
 @patch("os.getenv")
 def test_get_repo_failure(mock_getenv: MagicMock, mock_github: MagicMock) -> None:
@@ -48,6 +52,7 @@ def test_get_repo_failure(mock_getenv: MagicMock, mock_github: MagicMock) -> Non
         client._get_repo()
 
 
+@pytest.mark.unit
 @patch("src.infrastructure.github.pygithub_client.Github")
 @patch("os.getenv")
 def test_create_issue_success(mock_getenv: MagicMock, mock_github: MagicMock) -> None:
@@ -77,6 +82,7 @@ def test_create_issue_success(mock_getenv: MagicMock, mock_github: MagicMock) ->
     )
 
 
+@pytest.mark.unit
 @patch("src.infrastructure.github.pygithub_client.Github")
 @patch("os.getenv")
 def test_create_issue_failure(mock_getenv: MagicMock, mock_github: MagicMock) -> None:

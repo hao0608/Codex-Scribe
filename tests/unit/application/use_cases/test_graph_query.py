@@ -19,6 +19,7 @@ def mock_driver() -> MagicMock:
     return mock_driver
 
 
+@pytest.mark.unit
 def test_get_function_callers(mock_driver: MagicMock) -> None:
     """
     Tests that get_function_callers constructs and executes the correct query.
@@ -38,6 +39,7 @@ def test_get_function_callers(mock_driver: MagicMock) -> None:
     assert call_args[0][1] == {"function_name": function_name}
 
 
+@pytest.mark.unit
 def test_get_class_dependencies(mock_driver: MagicMock) -> None:
     """
     Tests that get_class_dependencies constructs and executes the correct query.
@@ -57,6 +59,7 @@ def test_get_class_dependencies(mock_driver: MagicMock) -> None:
     assert call_args[0][1] == {"class_name": class_name}
 
 
+@pytest.mark.unit
 def test_get_methods_in_class(mock_driver: MagicMock) -> None:
     """
     Tests that get_methods_in_class constructs and executes the correct query.

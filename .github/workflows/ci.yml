@@ -37,9 +37,9 @@ jobs:
         poetry run ruff check .
         poetry run mypy .
 
-    - name: Run tests with coverage
+    - name: Run unit tests with coverage
       run: |
-        poetry run pytest --cov=src --cov-report=xml
+        poetry run pytest -m "unit" --cov=src --cov-report=xml
 
   deploy-docs:
     needs: build
