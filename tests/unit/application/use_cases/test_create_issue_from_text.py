@@ -6,7 +6,6 @@ from src.application.use_cases.create_issue_from_text import CreateIssueFromText
 from src.domain.entities.github_issue_draft import GitHubIssueDraft
 
 
-
 @pytest.mark.unit
 def test_create_issue_from_text_use_case() -> None:
     # Arrange
