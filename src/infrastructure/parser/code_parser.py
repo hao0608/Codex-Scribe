@@ -152,9 +152,12 @@ class CodeParser:
         captures = self._execute_query(root_node, CLASS_QUERY)
         if "class.name" in captures:
             for node in captures["class.name"]:
-                class_name = node.text.decode("utf8")
-                class_id = f"{file_id}::{class_name}"
-                nodes.append(ClassNode(id=class_id, properties={"name": class_name}))
+                if node.text:
+                    class_name = node.text.decode("utf8")
+                    class_id = f"{file_id}::{class_name}"
+                    nodes.append(
+                        ClassNode(id=class_id, properties={"name": class_name})
+                    )
         return nodes
 
     def _extract_functions(
@@ -170,7 +173,7 @@ class CodeParser:
 
         for func_def_node in func_definitions:
             name_node = func_def_node.child_by_field_name("name")
-            if name_node:
+            if name_node and name_node.text:
                 func_name = name_node.text.decode("utf8")
                 func_id = f"{file_id}::{func_name}"
 
@@ -193,6 +196,8 @@ class CodeParser:
         captures = self._execute_query(root_node, IMPORT_QUERY)
         for _, nodes in captures.items():
             for node in nodes:
+                if not node.text:
+                    continue
                 text = node.text.decode("utf8")
                 if text.startswith("from"):
                     module_name = text.split(" import ")[0].replace("from ", "").strip()
@@ -214,11 +219,11 @@ class CodeParser:
         while current:
             if current.type == "function_definition":
                 name_node = current.child_by_field_name("name")
-                if name_node:
+                if name_node and name_node.text:
                     return f"{file_id}::{name_node.text.decode('utf8')}"
             elif current.type == "class_definition":
                 name_node = current.child_by_field_name("name")
-                if name_node:
+                if name_node and name_node.text:
                     return f"{file_id}::{name_node.text.decode('utf8')}"
             current = current.parent
         return file_id  # Default to file scope
@@ -246,11 +251,12 @@ class CodeParser:
 
             call_name = ""
             if name_node.type == "identifier":
-                call_name = name_node.text.decode("utf8")
+                if name_node.text:
+                    call_name = name_node.text.decode("utf8")
             elif name_node.type == "attribute":
                 # This handles method calls like `obj.method()`
                 attr_node = name_node.child_by_field_name("attribute")
-                if attr_node:
+                if attr_node and attr_node.text:
                     call_name = attr_node.text.decode("utf8")
 
             if not call_name:
