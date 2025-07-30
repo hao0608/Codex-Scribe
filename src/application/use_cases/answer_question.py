@@ -86,15 +86,19 @@ class AnswerQuestionUseCase:
                 results = self.graph_query_use_case.get_function_callers(
                     params["function_name"]
                 )
-                context = (
-                    f"The function '{params['function_name']}' is called by: {results}"
-                )
+                if results:
+                    context = f"The function '{params['function_name']}' is called by: {results}"
+                else:
+                    context = f"I couldn't find any callers for the function '{params['function_name']}' in the indexed codebase."
 
             elif task == "graph_query_methods" and params:
                 results = self.graph_query_use_case.get_methods_in_class(
                     params["class_name"]
                 )
-                context = f"The class '{params['class_name']}' contains the following methods: {results}"
+                if results:
+                    context = f"The class '{params['class_name']}' contains the following methods: {results}"
+                else:
+                    context = f"I couldn't find any methods for the class '{params['class_name']}' in the indexed codebase."
 
             # 3. Build the prompt
             system_message = (
