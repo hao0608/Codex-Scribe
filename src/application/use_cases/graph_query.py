@@ -4,7 +4,7 @@ This module contains the use case for querying the knowledge graph.
 
 from typing import Any
 
-from src.infrastructure.database.graph_db import Neo4jService
+from neo4j import Driver
 
 
 class GraphQueryUseCase:
@@ -12,11 +12,11 @@ class GraphQueryUseCase:
     Use case for running queries against the Neo4j knowledge graph.
     """
 
-    def __init__(self, graph_repository: Neo4jService):
+    def __init__(self, driver: Driver):
         """
         Initializes the GraphQueryUseCase.
         """
-        self.graph_repository = graph_repository
+        self._driver = driver
 
     def execute_query(
         self, query: str, params: dict[str, Any] | None = None
@@ -24,7 +24,7 @@ class GraphQueryUseCase:
         """
         Executes a raw Cypher query and returns the results.
         """
-        with self.graph_repository._driver.session() as session:
+        with self._driver.session() as session:
             result = session.run(query, params)
             return [record.data() for record in result]
 
