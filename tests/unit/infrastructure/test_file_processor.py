@@ -26,6 +26,7 @@ def temp_repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
+@pytest.mark.unit
 def test_discover_files_default(temp_repo: Path) -> None:
     """Tests discovering all supported files with default exclusions."""
     processor = FileProcessor()
@@ -41,6 +42,7 @@ def test_discover_files_default(temp_repo: Path) -> None:
     assert str(temp_repo / "__pycache__" / "cache.pyc") not in files
 
 
+@pytest.mark.unit
 def test_discover_files_with_include_dirs(temp_repo: Path) -> None:
     """Tests discovering files only from specified include directories."""
     processor = FileProcessor()
@@ -52,6 +54,7 @@ def test_discover_files_with_include_dirs(temp_repo: Path) -> None:
     assert str(temp_repo / "docs" / "guide.md") not in files
 
 
+@pytest.mark.unit
 def test_discover_files_with_custom_exclusions(temp_repo: Path) -> None:
     """Tests discovering files with custom exclusion patterns."""
     processor = FileProcessor(exclude_patterns=["**/*.js"])
@@ -62,6 +65,7 @@ def test_discover_files_with_custom_exclusions(temp_repo: Path) -> None:
     assert str(temp_repo / "src" / "utils.js") not in files
 
 
+@pytest.mark.unit
 def test_read_files(temp_repo: Path) -> None:
     """Tests reading multiple files into a dictionary."""
     processor = FileProcessor()
@@ -72,6 +76,7 @@ def test_read_files(temp_repo: Path) -> None:
     assert contents[str(temp_repo / "src" / "utils.js")] == "console.log('hello');"
 
 
+@pytest.mark.unit
 def test_read_file_not_found() -> None:
     """Tests that reading a non-existent file returns None."""
     processor = FileProcessor()

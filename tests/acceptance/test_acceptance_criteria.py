@@ -24,6 +24,8 @@ def real_neo4j_service() -> Neo4jService:
     service.close()
 
 
+@pytest.mark.integration
+@pytest.mark.external_deps
 def test_indexing_pipeline_creates_nodes_and_relationships(
     real_neo4j_service: Neo4jService,
 ) -> None:
@@ -52,6 +54,8 @@ def test_indexing_pipeline_creates_nodes_and_relationships(
     assert len(result) > 0 and result[0]["count"] > 0
 
 
+@pytest.mark.integration
+@pytest.mark.external_deps
 def test_cypher_query_finds_function_callers(
     real_neo4j_service: Neo4jService,
 ) -> None:
@@ -70,6 +74,7 @@ def test_cypher_query_finds_function_callers(
     assert isinstance(callers, list)
 
 
+@pytest.mark.integration
 def test_ai_agent_routes_to_graph_query() -> None:
     """
     Tests that the AI agent correctly routes to the graph query tool.

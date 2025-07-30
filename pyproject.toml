@@ -77,3 +77,8 @@ ignore = ["E501", "E402"]
 pythonpath = [
   "src"
 ]
+markers = [
+    "unit: marks tests as unit tests",
+    "integration: marks tests as integration tests",
+    "external_deps: marks tests requiring external services"
+]

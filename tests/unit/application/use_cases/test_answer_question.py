@@ -48,6 +48,7 @@ def answer_question_use_case(
     )
 
 
+@pytest.mark.unit
 def test_plan_task_routes_to_vector_search_by_default(
     answer_question_use_case: AnswerQuestionUseCase,
 ) -> None:
@@ -58,6 +59,7 @@ def test_plan_task_routes_to_vector_search_by_default(
     assert params is None
 
 
+@pytest.mark.unit
 def test_plan_task_routes_to_graph_query_for_callers(
     answer_question_use_case: AnswerQuestionUseCase,
 ) -> None:
@@ -68,6 +70,7 @@ def test_plan_task_routes_to_graph_query_for_callers(
     assert params == {"function_name": "process_payment"}
 
 
+@pytest.mark.unit
 def test_plan_task_routes_to_graph_query_for_methods(
     answer_question_use_case: AnswerQuestionUseCase,
 ) -> None:

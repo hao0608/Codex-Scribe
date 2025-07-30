@@ -14,6 +14,7 @@ def mock_use_case() -> MagicMock:
     return MagicMock(spec=CreateIssueFromTextUseCase)
 
 
+@pytest.mark.unit
 def test_analyze_and_create_issue_success(mock_use_case: MagicMock) -> None:
     # Arrange
     mock_use_case.execute.return_value = "http://example.com/issue/1"
@@ -34,6 +35,7 @@ def test_analyze_and_create_issue_success(mock_use_case: MagicMock) -> None:
     app.dependency_overrides.clear()
 
 
+@pytest.mark.unit
 def test_analyze_and_create_issue_failure(mock_use_case: MagicMock) -> None:
     # Arrange
     mock_use_case.execute.side_effect = Exception("Test error")
