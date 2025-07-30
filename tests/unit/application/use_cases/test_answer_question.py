@@ -133,3 +133,25 @@ def test_classify_query_defaults_to_vector_search(
 
     assert intent["type"] == "vector_search"
     assert intent["entity"] is None
+
+
+@pytest.mark.unit
+def test_get_optimal_top_k_for_simple_query(
+    answer_question_use_case: AnswerQuestionUseCase,
+) -> None:
+    """Tests that a simple query results in a lower top_k."""
+    simple_query = "What is the 'User' class?"
+    top_k = answer_question_use_case._get_optimal_top_k(simple_query)
+    assert top_k == 5
+
+
+@pytest.mark.unit
+def test_get_optimal_top_k_for_complex_query(
+    answer_question_use_case: AnswerQuestionUseCase,
+) -> None:
+    """Tests that a complex query results in a higher top_k."""
+    complex_query = (
+        "How does the authentication system work, and why was it designed this way?"
+    )
+    top_k = answer_question_use_case._get_optimal_top_k(complex_query)
+    assert top_k == 10
