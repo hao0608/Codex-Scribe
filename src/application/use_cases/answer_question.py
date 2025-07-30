@@ -2,8 +2,9 @@
 This module contains the use case for answering a question based on the indexed repository.
 """
 
+import json
 import re
-from typing import Any
+from typing import Any, cast
 
 from src.application.use_cases.graph_query import GraphQueryUseCase
 from src.domain.repositories.code_repository import CodeRepository
@@ -31,30 +32,65 @@ class AnswerQuestionUseCase:
         self.llm_client = llm_client
         self.graph_query_use_case = graph_query_use_case
 
-    def _plan_task(self, query: str) -> tuple[str, dict[str, Any] | None]:
+    def _build_classification_prompt(self, query: str) -> str:
         """
-        A simple task planner to decide whether to use vector search or graph query.
+        Builds the prompt for the LLM to classify the query intent.
         """
-        # Simple keyword-based routing
+        return f"""
+        You are an expert query classifier. Analyze the user's query and determine the most appropriate search method.
+
+        Examples:
+        - "Who calls the 'process_payment' function?" -> {{"type": "graph_query_callers", "entity": "process_payment", "confidence": 0.9}}
+        - "誰調用了 'authenticate' 方法？" -> {{"type": "graph_query_callers", "entity": "authenticate", "confidence": 0.9}}
+        - "What methods are in the User class?" -> {{"type": "graph_query_methods", "entity": "User", "confidence": 0.9}}
+        - "User 類別包含哪些方法？" -> {{"type": "graph_query_methods", "entity": "User", "confidence": 0.9}}
+        - "How does authentication work?" -> {{"type": "vector_search", "entity": null, "confidence": 0.95}}
+        - "解釋一下支付流程" -> {{"type": "vector_search", "entity": null, "confidence": 0.95}}
+
+        Query: "{query}"
+
+        Return a JSON object with the following schema:
+        {{
+            "type": "vector_search" | "graph_query_callers" | "graph_query_methods",
+            "entity": string | null,
+            "confidence": float (0.0 to 1.0)
+        }}
+        """
+
+    def _classify_query_intent(self, query: str) -> dict[str, Any]:
+        """
+        Classifies the user's query to determine the search strategy.
+        Uses an LLM for primary classification and falls back to regex.
+        """
+        # 1. Use LLM for classification
+        prompt = self._build_classification_prompt(query)
+        try:
+            response = self.llm_client.get_chat_completion(
+                prompt, system_message="You are a JSON-outputting classifier."
+            )
+            if response:
+                result = json.loads(response)
+                if result.get("confidence", 0) > 0.75:
+                    print(f"LLM classification successful: {result}")
+                    return result
+        except (json.JSONDecodeError, TypeError) as e:
+            print(f"LLM classification failed or returned invalid JSON: {e}")
+
+        # 2. Fallback to regex if LLM fails or has low confidence
+        print("Falling back to regex-based classification.")
         if re.search(r"who calls|callers of|被誰呼叫", query, re.IGNORECASE):
-            # Example: "Who calls the 'process_payment' function?"
             match = re.search(r"['\"](.+)['\"]", query)
             if match:
-                return "graph_query_callers", {"function_name": match.group(1)}
+                return {"type": "graph_query_callers", "entity": match.group(1)}
 
-        if re.search(r"methods in|方法在", query, re.IGNORECASE):
-            # Example: "What methods are in the 'User' class?"
+        if re.search(
+            r"methods in|方法在|what methods are in the", query, re.IGNORECASE
+        ):
             match = re.search(r"['\"](.+)['\"]", query)
             if match:
-                return "graph_query_methods", {"class_name": match.group(1)}
+                return {"type": "graph_query_methods", "entity": match.group(1)}
 
-        if re.search(r"what methods are in the", query, re.IGNORECASE):
-            match = re.search(r"['\"](.+)['\"]", query)
-            if match:
-                return "graph_query_methods", {"class_name": match.group(1)}
-
-        # Default to vector search
-        return "vector_search", None
+        return {"type": "vector_search", "entity": None}
 
     def execute(self, query: str) -> str:
         """
@@ -63,42 +99,40 @@ class AnswerQuestionUseCase:
         try:
             print(f"Received query: {query}")
 
-            task, params = self._plan_task(query)
-            print(f"Planned task: {task}")
+            intent = self._classify_query_intent(query)
+            task_type = intent.get("type", "vector_search")
+            entity = intent.get("entity")
+            print(f"Planned task: {task_type}, Entity: {entity}")
 
             context = ""
-            if task == "vector_search":
-                # 1. Create an embedding for the query
+            if task_type == "vector_search":
                 query_embedding = self.embedding_service.get_embedding(query)
                 print("Generated query embedding.")
-
-                # 2. Retrieve relevant code chunks
                 retrieved_chunks = self.code_repository.search(query_embedding, top_k=5)
                 if not retrieved_chunks:
                     return "I couldn't find any relevant information in the codebase to answer your question."
-
                 print(f"Retrieved {len(retrieved_chunks)} relevant chunks.")
                 context = "\n\n---\n\n".join(
                     [chunk.content for chunk in retrieved_chunks]
                 )
 
-            elif task == "graph_query_callers" and params:
+            elif task_type == "graph_query_callers" and entity:
                 results = self.graph_query_use_case.get_function_callers(
-                    params["function_name"]
+                    cast(str, entity)
                 )
                 if results:
-                    context = f"The function '{params['function_name']}' is called by: {results}"
+                    context = f"The function '{entity}' is called by: {results}"
                 else:
-                    context = f"I couldn't find any callers for the function '{params['function_name']}' in the indexed codebase."
+                    context = f"I couldn't find any callers for the function '{entity}' in the indexed codebase."
 
-            elif task == "graph_query_methods" and params:
+            elif task_type == "graph_query_methods" and entity:
                 results = self.graph_query_use_case.get_methods_in_class(
-                    params["class_name"]
+                    cast(str, entity)
                 )
                 if results:
-                    context = f"The class '{params['class_name']}' contains the following methods: {results}"
+                    context = f"The class '{entity}' contains the following methods: {results}"
                 else:
-                    context = f"I couldn't find any methods for the class '{params['class_name']}' in the indexed codebase."
+                    context = f"I couldn't find any methods for the class '{entity}' in the indexed codebase."
 
             # 3. Build the prompt
             system_message = (

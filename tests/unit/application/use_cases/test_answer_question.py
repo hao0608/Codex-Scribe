@@ -1,7 +1,8 @@
 """
-Unit tests for the AnswerQuestionUseCase.
+Unit tests for the AnswerQuestionUseCase, focusing on the hybrid query classifier.
 """
 
+import json
 from unittest.mock import MagicMock
 
 import pytest
@@ -15,21 +16,25 @@ from src.infrastructure.llm.openai_client import OpenAIClient
 
 @pytest.fixture
 def mock_embedding_service() -> MagicMock:
+    """Fixture for a mocked EmbeddingService."""
     return MagicMock(spec=EmbeddingService)
 
 
 @pytest.fixture
 def mock_code_repository() -> MagicMock:
+    """Fixture for a mocked CodeRepository."""
     return MagicMock(spec=CodeRepository)
 
 
 @pytest.fixture
 def mock_llm_client() -> MagicMock:
+    """Fixture for a mocked OpenAIClient."""
     return MagicMock(spec=OpenAIClient)
 
 
 @pytest.fixture
 def mock_graph_query_use_case() -> MagicMock:
+    """Fixture for a mocked GraphQueryUseCase."""
     return MagicMock(spec=GraphQueryUseCase)
 
 
@@ -40,6 +45,7 @@ def answer_question_use_case(
     mock_llm_client: MagicMock,
     mock_graph_query_use_case: MagicMock,
 ) -> AnswerQuestionUseCase:
+    """Fixture for the AnswerQuestionUseCase with mocked dependencies."""
     return AnswerQuestionUseCase(
         embedding_service=mock_embedding_service,
         code_repository=mock_code_repository,
@@ -49,33 +55,81 @@ def answer_question_use_case(
 
 
 @pytest.mark.unit
-def test_plan_task_routes_to_vector_search_by_default(
-    answer_question_use_case: AnswerQuestionUseCase,
+def test_classify_query_with_llm_success_for_callers(
+    answer_question_use_case: AnswerQuestionUseCase, mock_llm_client: MagicMock
 ) -> None:
-    """Tests that the default task is vector_search."""
+    """Tests successful LLM classification for a 'callers' query."""
+    query = "Who calls the 'process_payment' function?"
+    mock_response = {
+        "type": "graph_query_callers",
+        "entity": "process_payment",
+        "confidence": 0.9,
+    }
+    mock_llm_client.get_chat_completion.return_value = json.dumps(mock_response)
+
+    intent = answer_question_use_case._classify_query_intent(query)
+
+    assert intent["type"] == "graph_query_callers"
+    assert intent["entity"] == "process_payment"
+
+
+@pytest.mark.unit
+def test_classify_query_with_llm_success_for_vector_search(
+    answer_question_use_case: AnswerQuestionUseCase, mock_llm_client: MagicMock
+) -> None:
+    """Tests successful LLM classification for a vector search query."""
     query = "How does authentication work?"
-    task, params = answer_question_use_case._plan_task(query)
-    assert task == "vector_search"
-    assert params is None
+    mock_response = {"type": "vector_search", "entity": None, "confidence": 0.95}
+    mock_llm_client.get_chat_completion.return_value = json.dumps(mock_response)
+
+    intent = answer_question_use_case._classify_query_intent(query)
+
+    assert intent["type"] == "vector_search"
+    assert intent["entity"] is None
 
 
 @pytest.mark.unit
-def test_plan_task_routes_to_graph_query_for_callers(
-    answer_question_use_case: AnswerQuestionUseCase,
+def test_classify_query_fallback_to_regex_on_llm_failure(
+    answer_question_use_case: AnswerQuestionUseCase, mock_llm_client: MagicMock
 ) -> None:
-    """Tests routing for 'who calls' type questions."""
+    """Tests fallback to regex when the LLM returns invalid JSON."""
     query = 'Who calls the "process_payment" function?'
-    task, params = answer_question_use_case._plan_task(query)
-    assert task == "graph_query_callers"
-    assert params == {"function_name": "process_payment"}
+    mock_llm_client.get_chat_completion.return_value = "This is not JSON"
+
+    intent = answer_question_use_case._classify_query_intent(query)
+
+    assert intent["type"] == "graph_query_callers"
+    assert intent["entity"] == "process_payment"
 
 
 @pytest.mark.unit
-def test_plan_task_routes_to_graph_query_for_methods(
-    answer_question_use_case: AnswerQuestionUseCase,
+def test_classify_query_fallback_to_regex_on_low_confidence(
+    answer_question_use_case: AnswerQuestionUseCase, mock_llm_client: MagicMock
 ) -> None:
-    """Tests routing for 'methods in' type questions."""
+    """Tests fallback to regex when LLM confidence is low."""
     query = 'What methods are in the "User" class?'
-    task, params = answer_question_use_case._plan_task(query)
-    assert task == "graph_query_methods"
-    assert params == {"class_name": "User"}
+    mock_response = {
+        "type": "graph_query_methods",
+        "entity": "User",
+        "confidence": 0.5,  # Below the 0.75 threshold
+    }
+    mock_llm_client.get_chat_completion.return_value = json.dumps(mock_response)
+
+    intent = answer_question_use_case._classify_query_intent(query)
+
+    assert intent["type"] == "graph_query_methods"
+    assert intent["entity"] == "User"
+
+
+@pytest.mark.unit
+def test_classify_query_defaults_to_vector_search(
+    answer_question_use_case: AnswerQuestionUseCase, mock_llm_client: MagicMock
+) -> None:
+    """Tests that the default classification is vector_search when all else fails."""
+    query = "A very ambiguous query"
+    mock_llm_client.get_chat_completion.return_value = None  # Simulate LLM error
+
+    intent = answer_question_use_case._classify_query_intent(query)
+
+    assert intent["type"] == "vector_search"
+    assert intent["entity"] is None
