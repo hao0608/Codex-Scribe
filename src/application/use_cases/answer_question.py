@@ -56,6 +56,44 @@ class AnswerQuestionUseCase:
         # Default to vector search
         return "vector_search", None
 
+    def _determine_query_complexity(self, query: str) -> bool:
+        """
+        Determines if a query is complex based on a few heuristics.
+        """
+        # Heuristic 1: Query length
+        is_long_query = len(query.split()) > 10
+
+        # Heuristic 2: Presence of interrogative words that imply complexity
+        complex_keywords = [
+            "how",
+            "why",
+            "explain",
+            "describe",
+            "analyze",
+            "如何",
+            "為什麼",
+            "解釋",
+            "描述",
+            "分析",
+        ]
+        has_complex_keyword = any(
+            keyword in query.lower() for keyword in complex_keywords
+        )
+
+        # Heuristic 3: Multiple questions
+        has_multiple_questions = query.count("?") > 1
+
+        # Consider the query complex if at least two heuristics are met
+        return [is_long_query, has_complex_keyword, has_multiple_questions].count(
+            True
+        ) >= 2
+
+    def _get_optimal_top_k(self, query: str) -> int:
+        """
+        Returns the optimal top_k value based on query complexity.
+        """
+        return 10 if self._determine_query_complexity(query) else 5
+
     def execute(self, query: str) -> str:
         """
         Executes the question-answering process.
@@ -73,7 +111,11 @@ class AnswerQuestionUseCase:
                 print("Generated query embedding.")
 
                 # 2. Retrieve relevant code chunks
-                retrieved_chunks = self.code_repository.search(query_embedding, top_k=5)
+                top_k = self._get_optimal_top_k(query)
+                print(f"Using top_k={top_k} based on query complexity.")
+                retrieved_chunks = self.code_repository.search(
+                    query_embedding, top_k=top_k
+                )
                 if not retrieved_chunks:
                     return "I couldn't find any relevant information in the codebase to answer your question."
 
