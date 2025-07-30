@@ -1,0 +1,1351 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../deployment/">
+      
+      
+        <link rel="next" href="../monitoring/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Testing Strategy - Codex-Scribe</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#testing-strategy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Codex-Scribe" class="md-header__button md-logo" aria-label="Codex-Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Codex-Scribe
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Testing Strategy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Codex-Scribe" class="md-nav__button md-logo" aria-label="Codex-Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Codex-Scribe
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/system-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    System Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Design
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/data-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/security-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Considerations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/git-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Git Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/phase-1-mvp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 1 - MVP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/phase-2-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 2 - Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/phase-3-knowledge-graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 3 - Knowledge Graph
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Implementation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Implementation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Setup Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Testing Strategy
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing Strategy
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 概述
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 測試層次
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 測試層次">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 單元測試 (Unit Tests)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 整合測試 (Integration Tests)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-end-to-end-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 端到端測試 (End-to-End Tests)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aillm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. AI/LLM 特定的測試
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. AI/LLM 特定的測試">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 提示模板測試
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 輸出解析器測試
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 評估 (Evaluation)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. CI/CD 整合
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 更新記錄
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Research
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Research
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../research/literature-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Literature Review
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../research/technology-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Technology Comparison
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Technical
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/ai-model-specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Model Specs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/coding-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Coding Standards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/database-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/performance-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Benchmarks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 概述
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 測試層次
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 測試層次">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 單元測試 (Unit Tests)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 整合測試 (Integration Tests)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-end-to-end-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 端到端測試 (End-to-End Tests)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aillm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. AI/LLM 特定的測試
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. AI/LLM 特定的測試">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 提示模板測試
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 輸出解析器測試
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 評估 (Evaluation)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. CI/CD 整合
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 更新記錄
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="testing-strategy">Testing Strategy</h1>
+<h2 id="1">1. 概述</h2>
+<p>本文件定義了 <code>Codex-Scribe</code> 專案的測試策略和質量保證體系。一個全面的測試策略對於確保系統的可靠性、準確性和可維護性至關重要。</p>
+<p><strong>目標讀者</strong>: 開發者、QA 工程師。</p>
+<h2 id="2">2. 測試層次</h2>
+<p>本專案採用測試金字塔模型，涵蓋不同層次的測試。</p>
+<pre><code class="language-mermaid">graph TD
+    subgraph Testing Pyramid
+        direction TB
+        A[E2E Tests]
+        B[Integration Tests]
+        C[Unit Tests]
+    end
+
+    A -- Slower, More Brittle --&gt; B
+    B -- Balances Scope &amp; Speed --&gt; C
+    C -- Faster, More Isolated --&gt; A
+
+    style A fill:#f99
+    style B fill:#fc9
+    style C fill:#9f9
+</code></pre>
+<h3 id="21-unit-tests">2.1 單元測試 (Unit Tests)</h3>
+<ul>
+<li><strong>目標</strong>: 測試單個函式、方法或類別的邏輯是否正確，與外部依賴（如數據庫、API）隔離。</li>
+<li><strong>框架</strong>: <code>pytest</code></li>
+<li><strong>工具</strong>: <code>unittest.mock</code> 用於模擬 (mock) 外部依賴。</li>
+<li><strong>位置</strong>: <code>tests/unit</code></li>
+<li><strong>要求</strong>:<ul>
+<li>核心業務邏輯（<code>src/domain</code>, <code>src/application</code>）必須有高覆蓋率的單元測試。</li>
+<li>測試應快速、獨立且可重複。</li>
+</ul>
+</li>
+<li><strong>範例</strong>: 測試一個文本分割器函式是否能正確處理不同長度的文本。</li>
+</ul>
+<h3 id="22-integration-tests">2.2 整合測試 (Integration Tests)</h3>
+<ul>
+<li><strong>目標</strong>: 測試多個組件協同工作時是否正確。</li>
+<li><strong>框架</strong>: <code>pytest</code></li>
+<li><strong>工具</strong>:<ul>
+<li><code>docker-compose</code> 用於啟動真實的數據庫服務（ChromaDB, Neo4j）。</li>
+<li><code>pytest-https-server</code> 或類似工具用於模擬外部 API 服務。</li>
+</ul>
+</li>
+<li><strong>位置</strong>: <code>tests/integration</code></li>
+<li><strong>要求</strong>:<ul>
+<li>測試數據庫服務（如 <code>Neo4jService</code>）能否成功連接和查詢。</li>
+<li>測試 RAG 鏈能否從真實的向量數據庫中檢索數據並與 LLM API 互動。</li>
+<li>測試 FastAPI 端點能否正確調用應用層的 use cases。</li>
+</ul>
+</li>
+<li><strong>範例</strong>: 測試完整的索引管道，從讀取文件到寫入向量數據庫和圖形資料庫。</li>
+</ul>
+<h3 id="23-end-to-end-tests">2.3 端到端測試 (End-to-End Tests)</h3>
+<ul>
+<li><strong>目標</strong>: 從用戶的角度模擬完整的工作流程，驗證整個系統是否符合預期。</li>
+<li><strong>框架</strong>: <code>pytest</code> 結合 <code>requests</code> (用於 API) 和 <code>selenium</code> 或 <code>playwright</code> (用於 UI)。</li>
+<li><strong>位置</strong>: <code>tests/e2e</code></li>
+<li><strong>要求</strong>:<ul>
+<li>測試應覆蓋最關鍵的用戶場景。</li>
+<li>測試數量應較少，因為它們運行緩慢且維護成本高。</li>
+</ul>
+</li>
+<li><strong>範例</strong>:<ul>
+<li><strong>API E2E</strong>: 發送一個請求到 <code>/api/v1/analyses</code>，然後輪詢 <code>/api/v1/analyses/{task_id}</code> 端點，直到任務完成，最後驗證在 GitHub 上是否已成功建立 issue。</li>
+<li><strong>UI E2E</strong>: 自動化瀏覽器打開 Streamlit 應用，輸入一個問題，點擊提交，並驗證頁面上是否顯示了預期格式的答案。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-aillm">3. AI/LLM 特定的測試</h2>
+<p>測試基於 LLM 的系統有其獨特的挑戰。</p>
+<h3 id="31">3.1 提示模板測試</h3>
+<ul>
+<li><strong>目標</strong>: 確保提示模板能夠正確地格式化和注入變數。</li>
+<li><strong>方法</strong>: 使用單元測試，提供假的變數，驗證生成的提示字串是否符合預期。</li>
+</ul>
+<h3 id="32">3.2 輸出解析器測試</h3>
+<ul>
+<li><strong>目標</strong>: 確保輸出解析器能夠處理有效和無效的 LLM 輸出。</li>
+<li><strong>方法</strong>:<ul>
+<li><strong>有效輸出</strong>: 提供一個符合預期格式的假 LLM 輸出，驗證解析器能否成功解析。</li>
+<li><strong>無效輸出</strong>: 提供格式錯誤或不完整的輸出，驗證解析器是否能優雅地處理錯誤（例如，拋出特定異常或嘗試修復）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="33-evaluation">3.3 評估 (Evaluation)</h3>
+<ul>
+<li><strong>目標</strong>: 定量評估 RAG 系統的回答品質。</li>
+<li><strong>框架</strong>: LangChain 提供了評估工具（如 <code>Ragas</code>）。</li>
+<li><strong>方法</strong>:<ul>
+<li><strong>建立評估集</strong>: 創建一組 "問題-標準答案" 對。</li>
+<li><strong>指標</strong>:<ul>
+<li><strong>Faithfulness</strong>: 回答是否忠於提供的上下文。</li>
+<li><strong>Answer Relevancy</strong>: 回答是否與問題相關。</li>
+<li><strong>Context Precision/Recall</strong>: 檢索到的上下文是否準確和全面。</li>
+</ul>
+</li>
+<li><strong>流程</strong>: 定期在評估集上運行系統，計算上述指標，以追蹤模型或提示變更帶來的影響。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-cicd">4. CI/CD 整合</h2>
+<ul>
+<li><strong>工具</strong>: GitHub Actions</li>
+<li><strong>工作流程 (<code>.github/workflows/ci.yml</code>)</strong>:<ul>
+<li><strong>觸發器</strong>: 在對 <code>develop</code> 分支的 <code>push</code> 或 <code>pull_request</code> 時觸發。</li>
+<li><strong>步驟</strong>:<ol>
+<li>設置 Python 環境。</li>
+<li>安裝依賴 (<code>poetry install</code>)。</li>
+<li>運行代碼質量檢查 (<code>black --check</code>, <code>isort --check</code>, <code>mypy</code>).</li>
+<li>運行單元測試 (<code>pytest tests/unit</code>)。</li>
+<li>運行整合測試 (<code>pytest tests/integration</code>)。</li>
+</ol>
+</li>
+<li><strong>要求</strong>: 所有步驟都必須通過，PR 才能被合併。</li>
+</ul>
+</li>
+</ul>
+<h2 id="5">5. 更新記錄</h2>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>版本</th>
+<th>更新內容</th>
+<th>更新人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-07-24</td>
+<td>1.0</td>
+<td>初始版本建立</td>
+<td>Cline</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+    
+  </body>
+</html>

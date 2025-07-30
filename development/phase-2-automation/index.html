@@ -1,0 +1,1324 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../phase-1-mvp/">
+      
+      
+        <link rel="next" href="../phase-3-knowledge-graph/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Phase 2 - Automation - Codex-Scribe</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-2-automation-github-integration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Codex-Scribe" class="md-header__button md-logo" aria-label="Codex-Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Codex-Scribe
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 2 - Automation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Codex-Scribe" class="md-nav__button md-logo" aria-label="Codex-Scribe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Codex-Scribe
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/system-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    System Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/api-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Design
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/data-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/security-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security Considerations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Git Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase-1-mvp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 1 - MVP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Phase 2 - Automation
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 2 - Automation
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 概述
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 功能與範圍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 功能與範圍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 核心功能
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 範圍限制 (Out of Scope)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 技術棧
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 開發里程碑與任務分解
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 開發里程碑與任務分解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-github-api-featuregithub-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      里程碑 1: GitHub API 客戶端 (feature/github-client)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-llm-featurestructured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      里程碑 2: LLM 結構化輸出 (feature/structured-output)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-fastapi-featureapi-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      里程碑 3: FastAPI 觸發器 (feature/api-trigger)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 驗收標準
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 更新記錄
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phase-3-knowledge-graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Phase 3 - Knowledge Graph
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Implementation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Implementation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../implementation/setup-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Setup Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../implementation/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../implementation/testing-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing Strategy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../implementation/monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Research
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Research
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../research/literature-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Literature Review
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../research/technology-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Technology Comparison
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Technical
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Technical
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/ai-model-specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Model Specs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/coding-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Coding Standards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/database-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../technical/performance-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Benchmarks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 概述
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 功能與範圍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 功能與範圍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 核心功能
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 範圍限制 (Out of Scope)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 技術棧
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 開發里程碑與任務分解
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 開發里程碑與任務分解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-github-api-featuregithub-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      里程碑 1: GitHub API 客戶端 (feature/github-client)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-llm-featurestructured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      里程碑 2: LLM 結構化輸出 (feature/structured-output)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-fastapi-featureapi-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      里程碑 3: FastAPI 觸發器 (feature/api-trigger)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 驗收標準
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 更新記錄
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="phase-2-automation-github-integration">Phase 2: Automation - GitHub Integration</h1>
+<h2 id="1">1. 概述</h2>
+<p>本文件詳細描述了 <code>Codex-Scribe</code> 專案第二階段的開發計劃。在完成 MVP（程式碼問答機器人）後，此階段的目標是將系統與 GitHub 工作流程整合，實現從用戶回饋到建立 GitHub 問題草稿的半自動化流程。</p>
+<p><strong>目標</strong>: 提高開發效率，將 AI 的分析能力直接應用於專案管理工具中。</p>
+<h2 id="2">2. 功能與範圍</h2>
+<h3 id="21">2.1 核心功能</h3>
+<ul>
+<li><strong>GitHub API 整合</strong>: 能夠通過 API 安全地認證並與指定的 GitHub 儲存庫互動。</li>
+<li><strong>結構化輸出</strong>: 訓練 LLM 將其分析結果格式化為結構化的 JSON 物件，該物件對應 GitHub issue 的欄位（標題、內容、標籤）。</li>
+<li><strong>問題草稿建立</strong>: 能夠根據 LLM 生成的 JSON 物件，在 GitHub 上自動建立一個帶有特定標籤（如 <code>ai-draft</code>, <code>needs-review</code>）的問題。</li>
+<li><strong>API 觸發器</strong>: 建立一個 FastAPI 端點，可以接收外部請求（如來自內部表單的用戶回饋），並觸發整個分析和問題建立流程。</li>
+</ul>
+<h3 id="22-out-of-scope">2.2 範圍限制 (Out of Scope)</h3>
+<ul>
+<li><strong>Webhook 自動觸發</strong>: 本階段暫不處理來自 GitHub 的實時 Webhook 事件。</li>
+<li><strong>複雜的 UI</strong>: 僅提供 API 端點，不擴展現有的 Streamlit UI 功能。</li>
+<li><strong>自動解決問題</strong>: 系統只負責建立問題草稿，不涉及後續的程式碼修改或 PR 提交。</li>
+</ul>
+<h2 id="3">3. 技術棧</h2>
+<ul>
+<li><strong>Web 框架</strong>: FastAPI (用於建立 API 端點)</li>
+<li><strong>伺服器</strong>: Uvicorn</li>
+<li><strong>GitHub 客戶端</strong>: PyGithub</li>
+<li><strong>數據驗證</strong>: Pydantic (用於 API 模型和 LLM 結構化輸出)</li>
+<li><strong>其他</strong>: 延續階段一的技術棧 (LangChain, OpenAI, ChromaDB)。</li>
+</ul>
+<h2 id="4">4. 開發里程碑與任務分解</h2>
+<h3 id="1-github-api-featuregithub-client">里程碑 1: GitHub API 客戶端 (<code>feature/github-client</code>)</h3>
+<ul>
+<li>[x] <strong>認證模組</strong>: 在 <code>src/infrastructure/github</code> 中建立一個模組，負責處理 GitHub 個人存取令牌 (PAT) 的安全讀取和管理。</li>
+<li>[x] <strong>API 封裝</strong>: 建立一個 <code>GitHubService</code> 類別，封裝常用的 API 操作，特別是 <code>create_issue</code>。<ul>
+<li><code>create_issue(title: str, body: str, labels: List[str]) -&gt; Issue</code></li>
+</ul>
+</li>
+<li>[x] <strong>錯誤處理</strong>: 確保客戶端能妥善處理 API 錯誤（如權限不足、速率限制）。</li>
+<li>[x] <strong>單元測試</strong>: 編寫測試用例來驗證 <code>GitHubService</code> 的功能（可使用 <code>unittest.mock</code> 來模擬 API 呼叫）。</li>
+</ul>
+<h3 id="2-llm-featurestructured-output">里程碑 2: LLM 結構化輸出 (<code>feature/structured-output</code>)</h3>
+<ul>
+<li>[x] <strong>Pydantic 模型</strong>: 在 <code>src/domain/entities/github_issue_draft.py</code> 中定義一個 <code>GitHubIssueDraft</code> Pydantic 模型，包含 <code>title</code>, <code>body</code>, <code>labels</code> 欄位。</li>
+<li>[x] <strong>輸出解析器</strong>: 使用 LangChain 的 <code>PydanticOutputParser</code> 來確保 LLM 的輸出嚴格符合 <code>GitHubIssueDraft</code> 模型。</li>
+<li>[x] <strong>提示工程優化</strong>:<ul>
+<li><strong>忠實性</strong>: 指示 AI 優先考慮用戶的原始回饋，避免產生幻覺。</li>
+<li><strong>結構化</strong>: 要求 AI 在 issue 主體中包含 "User Report", "Proposed Solution", "Tasks" 等部分。</li>
+<li><strong>Few-shot 範例</strong>: 在提示中提供一個完整的範例，來引導 AI 學習期望的輸出格式。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-fastapi-featureapi-trigger">里程碑 3: FastAPI 觸發器 (<code>feature/api-trigger</code>)</h3>
+<ul>
+<li>[x] <strong>安裝依賴</strong>: 將 <code>fastapi</code> 和 <code>uvicorn</code> 添加到 <code>pyproject.toml</code>。</li>
+<li>[x] <strong>建立 API 應用</strong>: 在 <code>src/presentation/api</code> 中建立 <code>main.py</code>。</li>
+<li>[x] <strong>定義請求模型</strong>: 使用 Pydantic 建立一個 <code>AnalysisRequest</code> 模型，用於接收用戶回饋文本。</li>
+<li>[x] <strong>建立端點 (<code>/api/v1/analyze-and-create-issue</code>)</strong>:<ul>
+<li>該端點接收一個 <code>AnalysisRequest</code>。</li>
+<li>調用現有的 RAG 鏈來處理文本，並生成結構化的 <code>GitHubIssueDraft</code>。</li>
+<li>調用 <code>GitHubService</code> 將草稿發佈到 GitHub。</li>
+<li>返回成功建立的 issue URL。</li>
+</ul>
+</li>
+</ul>
+<h2 id="5">5. 驗收標準</h2>
+<ul>
+<li><strong>功能性</strong>:<ul>
+<li>[x] <code>GitHubService</code> 能夠成功在 <code>hao0608/Codex-Scribe</code> 儲存庫中建立一個測試 issue。</li>
+<li>[x] 向 FastAPI 端點發送一段用戶回饋，系統能夠成功執行 RAG 分析，並在 GitHub 上建立一個格式正確、內容相關的問題草稿。</li>
+<li>[x] 建立的問題應自動附帶 <code>ai-draft</code> 和 <code>needs-review</code> 標籤。</li>
+</ul>
+</li>
+<li><strong>性能</strong>:<ul>
+<li>[x] 從 API 請求到 GitHub issue 建立完成的總時間應在 15 秒以內。</li>
+</ul>
+</li>
+<li><strong>程式碼品質</strong>:<ul>
+<li>[x] 所有新程式碼都遵循專案的程式碼風格和設計原則。</li>
+<li>[x] FastAPI 端點和 GitHub 客戶端都有充分的單元測試覆蓋。</li>
+</ul>
+</li>
+</ul>
+<h2 id="6">6. 更新記錄</h2>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>版本</th>
+<th>更新內容</th>
+<th>更新人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-07-24</td>
+<td>1.0</td>
+<td>初始版本建立</td>
+<td>Cline</td>
+</tr>
+<tr>
+<td>2025-07-28</td>
+<td>2.0</td>
+<td>完成第二階段開發</td>
+<td>Cline</td>
+</tr>
+<tr>
+<td>2025-07-28</td>
+<td>2.1</td>
+<td>更新文檔以反映重構</td>
+<td>Cline</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+    
+  </body>
+</html>
