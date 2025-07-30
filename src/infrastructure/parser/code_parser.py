@@ -266,7 +266,11 @@ class CodeParser:
 
             # Add edge if the target is a known function/method in the file
             edge_key = (source_id, target_id)
-            if target_id in existing_node_ids and edge_key not in seen_edges:
+            if (
+                target_id in existing_node_ids
+                and source_id != target_id
+                and edge_key not in seen_edges
+            ):
                 edges.append(CallsEdge(source_id=source_id, target_id=target_id))
                 seen_edges.add(edge_key)
 
