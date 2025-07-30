@@ -12,7 +12,9 @@ from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
 from src.application.use_cases.answer_question import AnswerQuestionUseCase
+from src.application.use_cases.graph_query import GraphQueryUseCase
 from src.infrastructure.database.chroma_client import ChromaDBClient
+from src.infrastructure.database.graph_db import Neo4jService
 from src.infrastructure.llm.openai_client import OpenAIClient
 
 
@@ -34,10 +36,20 @@ def setup_dependencies() -> AnswerQuestionUseCase:
     code_repository = ChromaDBClient()
     llm_client = OpenAIClient()
 
+    # Setup Neo4j connection
+    neo4j_uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    neo4j_user = os.getenv("NEO4J_USER", "neo4j")
+    neo4j_password = os.getenv("NEO4J_PASSWORD", "password123")
+    graph_db_service = Neo4jService(
+        uri=neo4j_uri, user=neo4j_user, password=neo4j_password
+    )
+    graph_query_use_case = GraphQueryUseCase(graph_db_service)
+
     answer_question_use_case = AnswerQuestionUseCase(
         embedding_service=embedding_service,
         code_repository=code_repository,
         llm_client=llm_client,
+        graph_query_use_case=graph_query_use_case,
     )
     return answer_question_use_case
 

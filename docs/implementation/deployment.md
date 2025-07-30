@@ -57,6 +57,45 @@ graph TD
     - **向量數據庫**: 對於生產環境，建議使用託管的向量數據庫服務，或者在 EC2/RDS 上自行管理 ChromaDB/Postgres+pgvector。
     - **圖形資料庫**: 使用託管的 Neo4j AuraDB 或在 EC2 上自行管理。
 
+### Neo4j 設置
+
+我們使用 Docker Compose 來簡化本地開發環境中 Neo4j 的設置。
+
+**`docker-compose.yml`**:
+```yaml
+version: '3.8'
+
+services:
+  neo4j:
+    image: neo4j:5.13
+    container_name: codex-scribe-neo4j
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j_data:/data
+    environment:
+      - NEO4J_AUTH=neo4j/password123
+      - NEO4J_PLUGINS=["apoc"]
+    restart: unless-stopped
+
+volumes:
+  neo4j_data:
+```
+
+**啟動 Neo4j 服務**:
+```bash
+docker-compose up -d neo4j
+```
+
+**環境變數**:
+確保您的 `.env` 文件中包含以下變數，以便應用程式可以連接到 Neo4j：
+```
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=password123
+```
+
 ## 4. CI/CD 工作流程
 
 我們將使用 GitHub Actions 建立兩個主要的工作流程。
@@ -122,4 +161,5 @@ CMD ["uvicorn", "src.presentation.api.main:app", "--host", "0.0.0.0", "--port", 
 
 | 日期       | 版本 | 更新內容           | 更新人 |
 |------------|------|--------------------|--------|
+| 2025-07-30 | 1.1  | 添加 Neo4j 設置說明 | Cline  |
 | 2025-07-24 | 1.0  | 初始版本建立       | Cline  |

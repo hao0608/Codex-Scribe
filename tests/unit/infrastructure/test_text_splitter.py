@@ -2,10 +2,13 @@
 Unit tests for the CodeTextSplitter class.
 """
 
+import pytest
+
 from src.domain.entities.code_chunk import CodeChunk
 from src.infrastructure.text_splitter import CodeTextSplitter
 
 
+@pytest.mark.unit
 def test_split_simple_python_code() -> None:
     """Tests splitting a simple Python code snippet."""
     splitter = CodeTextSplitter(chunk_size=50, chunk_overlap=0)
@@ -18,6 +21,7 @@ def test_split_simple_python_code() -> None:
     assert chunks[1].content.startswith("class MyClass:")
 
 
+@pytest.mark.unit
 def test_chunk_id_is_deterministic() -> None:
     """Tests that the generated chunk ID is deterministic."""
     splitter = CodeTextSplitter()
@@ -31,6 +35,7 @@ def test_chunk_id_is_deterministic() -> None:
     assert chunks1[0].id == chunks2[0].id
 
 
+@pytest.mark.unit
 def test_line_numbers_are_calculated() -> None:
     """Tests that start and end line numbers are calculated correctly."""
     splitter = CodeTextSplitter(chunk_size=50, chunk_overlap=0)
