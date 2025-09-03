@@ -125,7 +125,7 @@ This is an AI-powered code intelligence platform built with **Clean Architecture
 ## Environment Dependencies
 
 - **Python**: 3.12+
-- **External Services**: 
+- **External Services**:
   - OpenAI API (for LLM and embeddings)
   - Neo4j database (via Docker)
   - GitHub API (for issue creation)

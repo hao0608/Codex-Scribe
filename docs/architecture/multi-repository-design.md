@@ -58,7 +58,7 @@ class MultiRepoChromaDBClient:
     def __init__(self, path: str = "./data/chroma_db"):
         self.client = chromadb.PersistentClient(path=path)
         self._collections: Dict[str, Collection] = {}
-    
+
     def get_collection(self, repository_name: str) -> Collection:
         collection_name = self._normalize_repo_name(repository_name)
         if collection_name not in self._collections:

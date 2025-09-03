@@ -20,12 +20,12 @@ class RepositoryNameNormalizer:
     """
 
     # GitHub URL patterns
-    HTTPS_PATTERN = re.compile(r'https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$')
-    SSH_PATTERN = re.compile(r'git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$')
+    HTTPS_PATTERN = re.compile(r"https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$")
+    SSH_PATTERN = re.compile(r"git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$")
 
     # Character replacement patterns
-    SPECIAL_CHARS_PATTERN = re.compile(r'[.\-/]')
-    REPO_NAME_PATTERN = re.compile(r'^([^/]+)/([^/]+)$')
+    SPECIAL_CHARS_PATTERN = re.compile(r"[.\-/]")
+    REPO_NAME_PATTERN = re.compile(r"^([^/]+)/([^/]+)$")
 
     @staticmethod
     def url_to_name(url: str) -> str:
@@ -79,7 +79,7 @@ class RepositoryNameNormalizer:
             raise ValueError("Repository name must contain owner/repo format")
 
         # Replace special characters with underscores
-        normalized = RepositoryNameNormalizer.SPECIAL_CHARS_PATTERN.sub('_', repo_name)
+        normalized = RepositoryNameNormalizer.SPECIAL_CHARS_PATTERN.sub("_", repo_name)
         return f"repo_{normalized}"
 
     @staticmethod
@@ -103,7 +103,7 @@ class RepositoryNameNormalizer:
             raise ValueError("Repository name must contain owner/repo format")
 
         # Replace special characters with underscores
-        normalized = RepositoryNameNormalizer.SPECIAL_CHARS_PATTERN.sub('_', repo_name)
+        normalized = RepositoryNameNormalizer.SPECIAL_CHARS_PATTERN.sub("_", repo_name)
         return f"Repo_{normalized}"
 
     @staticmethod
@@ -138,22 +138,22 @@ class RepositoryNameNormalizer:
         # This is a known limitation of the current approach
 
         # Split and try to find the owner/repo boundary
-        parts = name_part.split('_')
+        parts = name_part.split("_")
         if len(parts) < 2:
             raise ValueError("Invalid collection name format")
 
         # Simple heuristic: assume first part is owner, rest is repo
         owner = parts[0]
-        repo = '_'.join(parts[1:])
+        repo = "_".join(parts[1:])
 
         # Basic reconstruction - this is approximate
         result = f"{owner}/{repo}"
 
         # Apply some common transformations
         # Replace underscores with dashes (most common case)
-        result = result.replace('_', '-')
+        result = result.replace("_", "-")
         # But preserve the owner/repo separator
-        result = result.replace('/-', '/')
+        result = result.replace("/-", "/")
 
         return result
 
